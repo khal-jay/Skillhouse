@@ -88,6 +88,14 @@ export const SkillDetailHeader: React.FC<SkillDetailHeaderProps> = ({
   };
 
   const handleDownloadZip = () => {
+    if (typeof document !== "undefined") {
+      const link = document.createElement("a");
+      link.href = "/downloads/visual-canvas-deck.zip";
+      link.download = "visual-canvas-deck.zip";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
     setToastMessage("Preparing skill archive bundle download...");
     setTimeout(() => setToastMessage(null), 3000);
   };

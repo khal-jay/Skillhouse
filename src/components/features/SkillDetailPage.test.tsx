@@ -316,4 +316,16 @@ describe("SkillDetailPage Component (Figma Node 751:5602)", () => {
       expect(handleNavigateSkill).toHaveBeenCalled();
     }
   });
+
+  it("renders documentation tabs viewer and similar skills access badges", () => {
+    render(<SkillDetailPage />);
+    expect(screen.getByTestId("skill-doc-viewer")).toBeInTheDocument();
+    expect(screen.getByTestId("tab-overview-btn")).toBeInTheDocument();
+    expect(screen.getByTestId("tab-skill-md-btn")).toBeInTheDocument();
+    expect(screen.getByTestId("tab-reviews-btn")).toBeInTheDocument();
+
+    const accessBadges = screen.getAllByTestId("skill-card-access-badge");
+    expect(accessBadges.length).toBeGreaterThan(0);
+    expect(accessBadges[0]).toHaveTextContent(/included in pass|free/i);
+  });
 });

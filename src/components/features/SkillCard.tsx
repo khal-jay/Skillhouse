@@ -37,6 +37,7 @@ export interface SkillCardProps {
   isLoading?: boolean;
   installs?: number;
   accentGradient?: string;
+  accessBadge?: string;
 }
 
 const SKELETON_TITLE_WIDTHS = ["72%", "58%", "82%", "64%", "76%", "60%", "88%", "68%"];
@@ -100,6 +101,7 @@ export const SkillCard: React.FC<SkillCardProps> = ({
   isLoading = false,
   installs,
   accentGradient,
+  accessBadge,
 }) => {
   const [internalBookmarked, setInternalBookmarked] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
@@ -176,9 +178,16 @@ export const SkillCard: React.FC<SkillCardProps> = ({
         )}
         
         <div className={styles.imageOverlays}>
-          {category ? (
-            <span className={styles.pill}>{category}</span>
-          ) : <span />}
+          <div className={styles.overlayPillsGroup}>
+            {category ? (
+              <span className={styles.pill}>{category}</span>
+            ) : null}
+            {accessBadge ? (
+              <span className={styles.accessBadge} data-testid="skill-card-access-badge">
+                {accessBadge}
+              </span>
+            ) : null}
+          </div>
           <BookmarkButton
             size="sm"
             variant="white"

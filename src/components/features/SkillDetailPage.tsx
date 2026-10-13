@@ -16,6 +16,7 @@ import {
 import { NavBar } from "./NavBar";
 import { SkillDetailHeader } from "./SkillDetailHeader";
 import { SkillCard } from "./SkillCard";
+import { SkillDocViewer } from "./SkillDocViewer";
 import { Footer } from "./Footer";
 import { AuthProvider, useAuthSafe } from "@/lib/AuthContext";
 import styles from "./SkillDetailPage.module.css";
@@ -121,6 +122,7 @@ export const SIMILAR_SKILLS = [
     downloads: "2.4k",
     forks: "410",
     isBookmarked: false,
+    accessBadge: "Included in Pass",
   },
   {
     id: "clean-syntax-theme",
@@ -137,6 +139,7 @@ export const SIMILAR_SKILLS = [
     downloads: "1.8k",
     forks: "230",
     isBookmarked: false,
+    accessBadge: "Free",
   },
   {
     id: "isometric-icon-set",
@@ -153,6 +156,7 @@ export const SIMILAR_SKILLS = [
     downloads: "3.2k",
     forks: "680",
     isBookmarked: false,
+    accessBadge: "Included in Pass",
   },
   {
     id: "spatial-deck-pro",
@@ -169,6 +173,7 @@ export const SIMILAR_SKILLS = [
     downloads: "1.1k",
     forks: "140",
     isBookmarked: false,
+    accessBadge: "Included in Pass",
   },
 ];
 
@@ -397,47 +402,42 @@ const SkillDetailPageInner: React.FC<SkillDetailPageProps> = ({
                 />
               </div>
 
-              {/* Boxed Index Badge in Lower Right (Reference Style [ 01/03 ]) */}
-              <div
-                className={styles.boxedIndexBadge}
-                aria-label={`Slide ${activeThumbnailIndex + 1} of ${thumbnails.length}`}
-              >
-                <span>{String(activeThumbnailIndex + 1).padStart(2, "0")}</span>
-                <span className={styles.boxedIndexAccent}>
-                  /{String(thumbnails.length).padStart(2, "0")}
-                </span>
-              </div>
-            </div>
+              {/* Lower Bar with Slide Dots and Boxed Counter */}
+              <div className={styles.frameFooterRow}>
+                {thumbnails.length > 1 && (
+                  <div
+                    className={styles.slidePagination}
+                    role="tablist"
+                    aria-label="Preview gallery slide selection"
+                  >
+                    {thumbnails.map((_, idx) => (
+                      <button
+                        key={`slide-dot-${idx}`}
+                        type="button"
+                        role="tab"
+                        aria-selected={activeThumbnailIndex === idx}
+                        aria-label={`View slide ${idx + 1}`}
+                        className={`${styles.slideDot} ${
+                          activeThumbnailIndex === idx ? styles.slideDotActive : ""
+                        }`}
+                        onClick={() => setActiveThumbnailIndex(idx)}
+                        data-testid={`thumbnail-tab-${idx}`}
+                      />
+                    ))}
+                  </div>
+                )}
 
-            {/* Thumbnail Selectors Row */}
-            <div
-              className={styles.thumbnailsRow}
-              role="tablist"
-              aria-label="Preview gallery thumbnails"
-            >
-              {thumbnails.map((thumbSrc, idx) => (
-                <button
-                  key={`${thumbSrc}-${idx}`}
-                  type="button"
-                  role="tab"
-                  aria-selected={activeThumbnailIndex === idx}
-                  aria-label={`View preview slide ${idx + 1}`}
-                  className={`${styles.thumbnailCard} ${
-                    activeThumbnailIndex === idx ? styles.active : ""
-                  }`}
-                  onClick={() => setActiveThumbnailIndex(idx)}
-                  data-testid={`thumbnail-tab-${idx}`}
+                {/* Boxed Index Badge in Lower Right (Reference Style [ 01/03 ]) */}
+                <div
+                  className={styles.boxedIndexBadge}
+                  aria-label={`Slide ${activeThumbnailIndex + 1} of ${thumbnails.length}`}
                 >
-                  <Image
-                    src={thumbSrc}
-                    alt={`Thumbnail ${idx + 1}`}
-                    width={104}
-                    height={72}
-                    className={styles.thumbnailImage}
-                    unoptimized
-                  />
-                </button>
-              ))}
+                  <span>{String(activeThumbnailIndex + 1).padStart(2, "0")}</span>
+                  <span className={styles.boxedIndexAccent}>
+                    /{String(thumbnails.length).padStart(2, "0")}
+                  </span>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -454,6 +454,14 @@ const SkillDetailPageInner: React.FC<SkillDetailPageProps> = ({
             />
           </div>
         </section>
+
+        {/* 2.5 Skill Documentation Tabs Section */}
+        <SkillDocViewer
+          skillId={skill.id}
+          skillTitle={skill.title}
+          description={skill.description}
+          roles={skill.roles}
+        />
 
         {/* 3. Similar Skills Section (Editorial Carousel with Bisecting Border Arrows) */}
         <section
@@ -509,6 +517,7 @@ const SkillDetailPageInner: React.FC<SkillDetailPageProps> = ({
                   category={simSkill.category}
                   previewImage={simSkill.previewImage}
                   isBookmarked={simSkill.isBookmarked}
+                  accessBadge={simSkill.accessBadge}
                   onClick={() => {
                     if (onNavigateSkill) onNavigateSkill(simSkill.id);
                     else router.push(`/skills/${simSkill.id}`);

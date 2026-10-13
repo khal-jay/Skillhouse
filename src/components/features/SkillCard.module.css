@@ -79,6 +79,13 @@
   pointer-events: none;
 }
 
+.overlayPillsGroup {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  pointer-events: auto;
+}
+
 .pill {
   background-color: #222222;
   color: #FFFFFF;
@@ -95,6 +102,26 @@
   line-height: 1;
   white-space: nowrap;
   box-sizing: border-box;
+}
+
+.accessBadge {
+  background-color: #FB6320;
+  color: #FFFFFF;
+  font-family: var(--font-sans);
+  font-size: 10px;
+  font-weight: 600;
+  height: 26px;
+  padding: 0 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0px;
+  pointer-events: auto;
+  line-height: 1;
+  white-space: nowrap;
+  box-sizing: border-box;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
 }
 
 .bookmarkBtn {

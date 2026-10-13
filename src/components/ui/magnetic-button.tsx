@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useRef, useState } from "react";
-import { motion } from "motion/react";
 
 export interface MagneticButtonProps {
   children: React.ReactNode;
@@ -71,14 +70,19 @@ export const MagneticButton = ({
         ...style,
       }}
     >
-      <motion.div
+      <div
         ref={ref}
         data-testid="magnetic-inner"
-        animate={{ x: position.x, y: position.y }}
-        transition={{ type: "spring", stiffness: 150, damping: 25, mass: 0.1 }}
+        style={{
+          transform: `translate3d(${position.x}px, ${position.y}px, 0)`,
+          transition: hasMoved
+            ? "transform 150ms cubic-bezier(0.25, 1, 0.5, 1)"
+            : "transform 350ms cubic-bezier(0.175, 0.885, 0.32, 1.275)",
+          willChange: "transform",
+        }}
       >
         {children}
-      </motion.div>
+      </div>
     </div>
   );
 };

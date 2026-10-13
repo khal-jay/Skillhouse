@@ -18,7 +18,7 @@
   width: 100%;
   max-width: 1400px;
   margin: 0 auto;
-  padding: 28px 40px 80px 40px;
+  padding: 0 40px 80px 40px;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
@@ -28,10 +28,14 @@
 /* 1. Subheader Breadcrumbs Strip (Exact Figma Node 878:3503) */
 .breadcrumbBar {
   width: 100%;
-  border-bottom: 1px solid rgba(166, 166, 166, 0.5);
+  border-bottom: 1px solid var(--color-border, rgba(166, 166, 166, 0.5));
   border-top: 1px solid rgba(166, 166, 166, 0.25);
   background-color: var(--color-bg-page, #FFEEDD);
   box-sizing: border-box;
+  position: -webkit-sticky;
+  position: sticky;
+  top: 72px;
+  z-index: 90;
 }
 
 .breadcrumbBarInner {
@@ -163,19 +167,20 @@
   min-width: 0;
   position: -webkit-sticky;
   position: sticky;
-  top: 88px; /* 72px sticky navbar + 16px offset */
+  top: 135px; /* 72px navbar + 63px breadcrumb bar = flush with breadcrumb line */
   align-self: start;
   height: -webkit-fit-content;
   height: fit-content;
   z-index: 10;
 }
 
-/* Editorial Media Showcase Frame (Reference Image Style) */
+/* Editorial Media Showcase Frame - Hanging from Breadcrumb Border */
 .editorialFrameContainer {
   position: relative;
   width: 100%;
   background-color: #FFECD8;
-  border: 1px solid #111111;
+  border: 1px solid var(--color-border, rgba(166, 166, 166, 0.5));
+  border-top: none; /* Merges seamlessly into the breadcrumb bottom border line */
   padding: 24px;
   box-sizing: border-box;
   display: flex;
@@ -215,9 +220,9 @@
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  border: 1px solid #111111;
+  border: 1px solid var(--color-border, rgba(166, 166, 166, 0.5));
   background-color: #FFFFFF;
-  color: #111111;
+  color: #54392D;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -225,11 +230,12 @@
   z-index: 25;
   padding: 0;
   box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.08);
-  transition: background-color 150ms ease, color 150ms ease, transform 150ms ease;
+  transition: background-color 150ms ease, color 150ms ease, border-color 150ms ease, transform 150ms ease;
 }
 
 .bisectingArrow:hover {
-  background-color: #111111;
+  background-color: #54392D;
+  border-color: #54392D;
   color: #FFFFFF;
 }
 
@@ -245,18 +251,55 @@
   right: -20px;
 }
 
-/* Boxed Index Badge in Lower Right (Reference Image Style) */
-.boxedIndexBadge {
-  align-self: flex-end;
+/* Frame Footer Row with Slide Dots and Boxed Badge */
+.frameFooterRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
   margin-top: 14px;
-  border: 1px solid #111111;
+}
+
+.slidePagination {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.slideDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: 1px solid var(--color-border, rgba(166, 166, 166, 0.5));
+  background-color: #FFFFFF;
+  cursor: pointer;
+  padding: 0;
+  transition: background-color 150ms ease, border-color 150ms ease, transform 150ms ease;
+}
+
+.slideDot:hover {
+  border-color: #54392D;
+}
+
+.slideDot:active {
+  transform: scale(0.96);
+}
+
+.slideDotActive {
+  background-color: #FB6320;
+  border-color: #FB6320;
+  transform: scale(1.15);
+}
+
+.boxedIndexBadge {
+  border: 1px solid var(--color-border, rgba(166, 166, 166, 0.5));
   background-color: #FFFFFF;
   padding: 3px 8px;
   font-family: var(--font-sans);
   font-size: 13px;
   font-weight: 700;
   line-height: 1;
-  color: #111111;
+  color: #54392D;
   display: inline-flex;
   align-items: center;
   gap: 1px;
@@ -319,6 +362,7 @@
 .panelColumn {
   width: 100%;
   min-width: 0;
+  padding-top: 28px;
 }
 
 /* 3. Similar Skills Section & Bisecting Carousel */
@@ -334,7 +378,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-bottom: 1px solid #111111;
+  border-bottom: 1px solid var(--color-border, rgba(166, 166, 166, 0.5));
   padding-bottom: 12px;
 }
 
@@ -347,14 +391,14 @@
 }
 
 .similarCounterBadge {
-  border: 1px solid #111111;
+  border: 1px solid var(--color-border, rgba(166, 166, 166, 0.5));
   background-color: #FFFFFF;
   padding: 3px 8px;
   font-family: var(--font-sans);
   font-size: 13px;
   font-weight: 700;
   font-variant-numeric: tabular-nums;
-  color: #111111;
+  color: #54392D;
 }
 
 .similarCounterAccent {
@@ -373,21 +417,22 @@
   width: 44px;
   height: 44px;
   border-radius: 50%;
-  border: 1px solid #111111;
+  border: 1px solid var(--color-border, rgba(166, 166, 166, 0.5));
   background-color: #FFFFFF;
-  color: #111111;
+  color: #54392D;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   z-index: 25;
   padding: 0;
-  box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.1);
-  transition: background-color 150ms ease, color 150ms ease, transform 150ms ease;
+  box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.08);
+  transition: background-color 150ms ease, color 150ms ease, border-color 150ms ease, transform 150ms ease;
 }
 
 .similarBisectingArrow:hover:not(:disabled) {
-  background-color: #111111;
+  background-color: #54392D;
+  border-color: #54392D;
   color: #FFFFFF;
 }
 
