@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useMemo } from "react";
+import { useRouter } from "next/navigation";
 import {
   ReceiptText,
   Bookmark,
@@ -72,6 +73,7 @@ export const MySkillsWorkspace: React.FC<MySkillsWorkspaceProps> = ({
   const [activeTab, setActiveTab] = useState<"saved" | "installed">("saved");
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
+  const router = useRouter();
   const [drawerSkill, setDrawerSkill] = useState<SkillItem | null>(null);
 
   // Extract skills belonging to user
@@ -403,7 +405,7 @@ export const MySkillsWorkspace: React.FC<MySkillsWorkspaceProps> = ({
         onExpandFullPage={(id) => {
           if (onSelectSkillDetail) onSelectSkillDetail(id);
           else if (typeof window !== "undefined") {
-            window.location.href = `/skills/${id}`;
+            router.push(`/skills/${id}`);
           }
         }}
       />

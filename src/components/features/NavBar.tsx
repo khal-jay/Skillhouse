@@ -17,7 +17,7 @@ import { CategoriesDropdown, CategoryTab } from "./CategoriesDropdown";
 import { UserMenuPopover } from "./UserMenuPopover";
 import { useAuthSafe } from "@/lib/AuthContext";
 import styles from "./NavBar.module.css";
-import { motion, useScroll, useMotionValueEvent, useReducedMotion } from "motion/react";
+import { motion, useScroll, useMotionValueEvent } from "motion/react";
 
 export type NavView = "home" | "marketplace" | "my-skills" | "design-system";
 

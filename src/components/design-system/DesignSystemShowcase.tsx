@@ -1,5 +1,6 @@
-import { MySkillsWorkspace } from "../features/MySkillsWorkspace/MySkillsWorkspace";
 "use client";
+
+import { MySkillsWorkspace } from "../features/MySkillsWorkspace/MySkillsWorkspace";
 
 import React, { useState } from "react";
 import { Button } from "../ui/Button";
