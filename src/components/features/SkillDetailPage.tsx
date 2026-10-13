@@ -35,6 +35,49 @@ export interface SkillDetailData {
   roles?: string[];
 }
 
+export interface WorkflowStepMeta {
+  step: string;
+  title: string;
+  tagline: string;
+}
+
+export const WORKFLOW_METADATA_BY_SKILL: Record<string, WorkflowStepMeta[]> = {
+  "visual-canvas-deck": [
+    {
+      step: "01",
+      title: "Brief Input",
+      tagline: "Prompt to Spatial Outline",
+    },
+    {
+      step: "02",
+      title: "Canvas Composition",
+      tagline: "Visual Layout Iteration",
+    },
+    {
+      step: "03",
+      title: "Export & Delivery",
+      tagline: "Browser & PPTX Ready",
+    },
+  ],
+  "pixel-promo-video": [
+    {
+      step: "01",
+      title: "Design Import",
+      tagline: "Extract Vector Assets",
+    },
+    {
+      step: "02",
+      title: "Motion Synthesis",
+      tagline: "4K Keyframe Interpolation",
+    },
+    {
+      step: "03",
+      title: "Teaser Render",
+      tagline: "Cinematic Video Export",
+    },
+  ],
+};
+
 export const DEFAULT_DETAIL_SKILL: SkillDetailData = {
   id: "visual-canvas-deck",
   title: "Visual Canvas Deck",
@@ -170,6 +213,15 @@ const SkillDetailPageInner: React.FC<SkillDetailPageProps> = ({
     : [skill.previewImage];
 
   const activeImage = thumbnails[activeThumbnailIndex] || skill.previewImage;
+  const defaultStepMeta = [
+    { step: "01", title: "Brief Input", tagline: "Specification & Prompt" },
+    { step: "02", title: "Synthesis", tagline: "Agent Composition" },
+    { step: "03", title: "Artifact Output", tagline: "Production Delivery" },
+  ];
+
+  const stepsList = (WORKFLOW_METADATA_BY_SKILL[skill.id] || defaultStepMeta).slice(0, Math.max(thumbnails.length, 3));
+  const activeStepMeta = stepsList[activeThumbnailIndex] || stepsList[0];
+
   const visibleSimilarSkills = SIMILAR_SKILLS.slice(similarSkillsOffset, similarSkillsOffset + 4);
 
   const handlePrevSimilar = () => {
@@ -303,6 +355,16 @@ const SkillDetailPageInner: React.FC<SkillDetailPageProps> = ({
               className={styles.mainPreviewCanvas}
               data-testid="skill-detail-main-preview"
             >
+              {/* Contextual Workflow Step Live Indicator (Approach 3) */}
+              <div className={styles.canvasStepBadge} aria-live="polite">
+                <span className={styles.canvasStepPulse} aria-hidden="true" />
+                <span className={styles.canvasStepCounter}>
+                  STEP {activeStepMeta.step} OF {String(stepsList.length).padStart(2, "0")}
+                </span>
+                <span className={styles.canvasStepDivider} aria-hidden="true">•</span>
+                <span className={styles.canvasStepLabel}>{activeStepMeta.title}</span>
+              </div>
+
               <Image
                 src={activeImage}
                 alt={`${skill.title} preview canvas`}
@@ -314,29 +376,55 @@ const SkillDetailPageInner: React.FC<SkillDetailPageProps> = ({
               />
             </div>
 
-            {/* Thumbnail Selectors Row */}
-            <div className={styles.thumbnailsRow} role="tablist" aria-label="Preview gallery thumbnails">
-              {thumbnails.map((thumbSrc, idx) => (
-                <button
-                  key={`${thumbSrc}-${idx}`}
-                  type="button"
-                  role="tab"
-                  aria-selected={activeThumbnailIndex === idx}
-                  aria-label={`View preview slide ${idx + 1}`}
-                  className={`${styles.thumbnailCard} ${activeThumbnailIndex === idx ? styles.active : ""}`}
-                  onClick={() => setActiveThumbnailIndex(idx)}
-                  data-testid={`thumbnail-tab-${idx}`}
-                >
-                  <Image
-                    src={thumbSrc}
-                    alt={`Thumbnail ${idx + 1}`}
-                    width={104}
-                    height={72}
-                    className={styles.thumbnailImage}
-                    unoptimized
-                  />
-                </button>
-              ))}
+            {/* Approach 3: Contextual Workflow Step Strip (Agent Lifecycle Pipeline) */}
+            <div className={styles.workflowStrip} role="region" aria-label="Skill workflow milestones">
+              <div className={styles.workflowHeader}>
+                <div className={styles.workflowHeading}>
+                  <span className={styles.workflowPulseDot} aria-hidden="true" />
+                  <span>Agent Output Pipeline</span>
+                </div>
+                <span className={styles.workflowHelper}>
+                  Phase {activeStepMeta.step} of {String(stepsList.length).padStart(2, "0")}
+                </span>
+              </div>
+
+              <div className={styles.stepsTrack} role="tablist" aria-label="Workflow lifecycle steps">
+                {stepsList.map((stepItem, idx) => {
+                  const thumbSrc = thumbnails[idx] || thumbnails[0];
+                  const isActive = activeThumbnailIndex === idx;
+
+                  return (
+                    <button
+                      key={`step-${stepItem.step}-${idx}`}
+                      type="button"
+                      role="tab"
+                      aria-selected={isActive}
+                      aria-label={`Step ${stepItem.step}: ${stepItem.title} - ${stepItem.tagline}`}
+                      className={`${styles.stepCard} ${isActive ? styles.active : ""}`}
+                      onClick={() => setActiveThumbnailIndex(idx)}
+                      data-testid={`thumbnail-tab-${idx}`}
+                    >
+                      <div className={styles.stepMetaRow}>
+                        <span className={styles.stepNumBadge}>{stepItem.step}</span>
+                        <span className={styles.stepTitle}>{stepItem.title}</span>
+                      </div>
+
+                      <div className={styles.stepThumbFrame}>
+                        <Image
+                          src={thumbSrc}
+                          alt={stepItem.title}
+                          fill
+                          sizes="150px"
+                          className={styles.stepThumbImg}
+                          unoptimized
+                        />
+                      </div>
+
+                      <span className={styles.stepTagline}>{stepItem.tagline}</span>
+                    </button>
+                  );
+                })}
+              </div>
             </div>
           </div>
 

@@ -378,4 +378,10 @@ describe("Features NavBar Component", () => {
     fireEvent.click(helpBtn);
     expect(screen.queryByRole("menu")).not.toBeInTheDocument();
   });
+
+  it("renders floating pill dock when scrolled is true", () => {
+    const { container } = render(<NavBar scrolled={true} />);
+    const header = container.querySelector("header");
+    expect(header?.className).toContain("headerScrolled");
+  });
 });

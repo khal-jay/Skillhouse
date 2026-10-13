@@ -197,49 +197,237 @@
   transform: scale(1.02);
 }
 
-/* Thumbnails Selector Row */
-.thumbnailsRow {
+/* Approach 3: Contextual Workflow Step Strip (Agent Lifecycle Pipeline) */
+.canvasStepBadge {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  z-index: 5;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background-color: rgba(28, 25, 23, 0.82);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 9999px;
+  padding: 6px 14px;
+  color: #FFFFFF;
+  box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.18);
+  pointer-events: none;
+  transition: opacity 150ms ease;
+}
+
+.canvasStepPulse {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: #FB6320;
+  box-shadow: 0 0 0 3px rgba(251, 99, 32, 0.25);
+  animation: pulseDot 2s infinite ease-in-out;
+}
+
+@keyframes pulseDot {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.2); opacity: 0.8; }
+}
+
+.canvasStepCounter {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: #FB6320;
+  text-transform: uppercase;
+  font-variant-numeric: tabular-nums;
+}
+
+.canvasStepDivider {
+  color: rgba(255, 255, 255, 0.35);
+  font-size: 10px;
+}
+
+.canvasStepLabel {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 500;
+  color: #FAFAFA;
+}
+
+/* Workflow Step Strip Container */
+.workflowStrip {
   display: flex;
+  flex-direction: column;
   gap: 12px;
   width: 100%;
-  flex-wrap: wrap;
-}
-
-.thumbnailCard {
-  width: 104px;
-  height: 72px;
-  border: 1px solid rgba(166, 166, 166, 0.5);
-  border-radius: var(--radius-none, 0px);
   background-color: #FFECD8;
-  padding: 0;
-  margin: 0;
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
+  border: 1px solid rgba(166, 166, 166, 0.45);
+  border-radius: 8px;
+  padding: 14px 16px;
   box-sizing: border-box;
-  transition: border-color var(--transition-fast, 150ms ease),
-              transform var(--transition-fast, 150ms ease),
-              box-shadow var(--transition-fast, 150ms ease);
 }
 
-.thumbnailCard:hover {
+.workflowHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.workflowHeading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #54392D;
+}
+
+.workflowPulseDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: #FB6320;
+}
+
+.workflowHelper {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  color: #7F776E;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Step Cards Track */
+.stepsTrack {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  width: 100%;
+}
+
+.stepCard {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background-color: #FFFFFF;
+  border: 1px solid rgba(166, 166, 166, 0.4);
+  border-radius: 6px;
+  padding: 8px;
+  cursor: pointer;
+  text-align: left;
+  outline: none;
+  box-sizing: border-box;
+  transition: border-color 150ms ease,
+              background-color 150ms ease,
+              transform 150ms ease,
+              box-shadow 150ms ease;
+  min-height: 40px;
+}
+
+.stepCard:hover {
   border-color: #54392D;
   transform: translateY(-2px);
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.05);
 }
 
-.thumbnailCard:active {
+.stepCard:active {
   transform: scale(0.96);
 }
 
-.thumbnailCard.active {
+.stepCard.active {
   border: 2px solid #FB6320;
-  box-shadow: none;
+  background-color: #FFF9F5;
+  box-shadow: 0px 4px 16px rgba(251, 99, 32, 0.12);
 }
 
-.thumbnailImage {
+.stepMetaRow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+}
+
+.stepNumBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 18px;
+  padding: 0 4px;
+  border-radius: 4px;
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  background-color: #FFE3D6;
+  color: #FB6320;
+  transition: background-color 150ms ease, color 150ms ease;
+}
+
+.stepCard.active .stepNumBadge {
+  background-color: #FB6320;
+  color: #FFFFFF;
+}
+
+.stepTitle {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 600;
+  color: #242426;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-wrap: balance;
+}
+
+.stepCard.active .stepTitle {
+  color: #FB6320;
+}
+
+.stepThumbFrame {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  max-height: 64px;
+  border-radius: 4px;
+  overflow: hidden;
+  position: relative;
+  background-color: #FFECD8;
+  outline: 1px solid oklch(0 0 0 / 0.08);
+}
+
+.stepThumbImg {
   object-fit: cover;
   width: 100%;
   height: 100%;
+  transition: transform 200ms ease;
+}
+
+.stepCard:hover .stepThumbImg {
+  transform: scale(1.04);
+}
+
+.stepTagline {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  color: #7F776E;
+  line-height: 1.3;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.stepCard.active .stepTagline {
+  color: #54392D;
+}
+
+@media (max-width: 600px) {
+  .stepsTrack {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
 }
 
 /* Left Specs Wrapper */

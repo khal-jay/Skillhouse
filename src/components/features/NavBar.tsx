@@ -17,6 +17,7 @@ import { CategoriesDropdown, CategoryTab } from "./CategoriesDropdown";
 import { UserMenuPopover } from "./UserMenuPopover";
 import { useAuthSafe } from "@/lib/AuthContext";
 import styles from "./NavBar.module.css";
+import { motion, useScroll, useMotionValueEvent, useReducedMotion } from "motion/react";
 
 export type NavView = "home" | "marketplace" | "my-skills" | "design-system";
 
@@ -37,6 +38,7 @@ export interface NavBarProps {
   isSignedIn?: boolean;
   onSignOut?: () => void;
   savedSkillsCount?: number;
+  scrolled?: boolean;
   user?: {
     name: string;
     email?: string;
@@ -48,7 +50,35 @@ export interface NavBarProps {
   className?: string;
 }
 
+const navVariants = {
+  top: {
+    maxWidth: "1600px",
+    width: "100%",
+    y: 0,
+    borderRadius: 0,
+    backgroundColor: "rgba(255, 238, 221, 1)",
+    backdropFilter: "none",
+    boxShadow: "0 0 0 0px transparent",
+    borderWidth: "0px",
+    borderStyle: "solid",
+    borderColor: "transparent",
+  },
+  scrolled: {
+    maxWidth: "1240px",
+    width: "92%",
+    y: 10,
+    borderRadius: 40,
+    backgroundColor: "rgba(255, 238, 221, 0.88)",
+    backdropFilter: "blur(14px)",
+    boxShadow: "0 16px 36px -6px rgba(0, 0, 0, 0.08), 0 4px 12px -2px rgba(0, 0, 0, 0.03), 0 0 0 1px rgba(205, 183, 174, 0.75)",
+    borderWidth: "1px",
+    borderStyle: "solid",
+    borderColor: "rgba(205, 183, 174, 0.9)",
+  },
+};
+
 export const NavBar: React.FC<NavBarProps> = ({
+  scrolled: propScrolled,
   currentView = "home",
   onViewChange,
   searchValue = "",
@@ -71,6 +101,17 @@ export const NavBar: React.FC<NavBarProps> = ({
   const [categoriesOpen, setCategoriesOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const { scrollY } = useScroll();
+  const [internalScrolled, setInternalScrolled] = useState(false);
+  const isScrolled = propScrolled !== undefined ? propScrolled : internalScrolled;
+
+  useMotionValueEvent(scrollY, "change", (latest) => {
+    if (latest > 50) {
+      setInternalScrolled(true);
+    } else {
+      setInternalScrolled(false);
+    }
+  });
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
@@ -143,8 +184,18 @@ export const NavBar: React.FC<NavBarProps> = ({
   }, [categoriesOpen, userMenuOpen]);
 
   return (
-    <header className={`${styles.header} ${responsiveMode === "tablet" ? styles.modeTablet : ""} ${responsiveMode === "mobile" ? styles.modeMobile : ""} ${className}`}>
-      <div className={styles.container}>
+    <header className={`${styles.header} ${isScrolled ? styles.headerScrolled : ""} ${responsiveMode === "tablet" ? styles.modeTablet : ""} ${responsiveMode === "mobile" ? styles.modeMobile : ""} ${className}`}>
+      <motion.div
+        className={styles.container}
+        initial="top"
+        animate={isScrolled ? "scrolled" : "top"}
+        variants={navVariants}
+        transition={{
+          type: "spring",
+          stiffness: 260,
+          damping: 28,
+        }}
+      >
         {/* Brand Logo (Node 744:1064) */}
         <Link
           href="/"
@@ -385,7 +436,7 @@ export const NavBar: React.FC<NavBarProps> = ({
             {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
         </div>
-      </div>
+      </motion.div>
 
       {/* Mobile Drawer Menu */}
       {mobileMenuOpen && (

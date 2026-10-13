@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { render, screen, fireEvent, act, within } from "@testing-library/react";
+import { render, screen, fireEvent, act, within, renderHook } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import {
   Select,
@@ -13,6 +13,7 @@ import {
   CustomSelect,
 } from "./index";
 import { Globe, Cpu } from "lucide-react";
+import { useSelectContext } from "./SelectContext";
 
 describe("Select Design System Primitive", () => {
   const options = [
@@ -326,5 +327,13 @@ describe("Select Design System Primitive", () => {
     fireEvent.click(screen.getByTestId("select-item-design"));
 
     expect(handleChange).toHaveBeenCalledWith("design");
+  });
+
+  it("throws when useSelectContext is called outside Select", () => {
+    const spy = vi.spyOn(console, "error").mockImplementation(() => {});
+    expect(() => renderHook(() => useSelectContext())).toThrow(
+      "useSelectContext must be used within a <Select> component"
+    );
+    spy.mockRestore();
   });
 });

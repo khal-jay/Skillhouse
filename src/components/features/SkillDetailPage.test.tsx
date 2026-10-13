@@ -2,6 +2,7 @@ import React from "react";
 import { render, screen, fireEvent, within } from "@testing-library/react";
 import { describe, it, expect, vi } from "vitest";
 import { SkillDetailPage, DEFAULT_DETAIL_SKILL } from "./SkillDetailPage";
+import { AuthProvider } from "@/lib/AuthContext";
 
 const mockPush = vi.fn();
 const mockBack = vi.fn();
@@ -269,5 +270,14 @@ describe("SkillDetailPage Component (Figma Node 751:5602)", () => {
     fireEvent.click(logoutBtn);
     expect(screen.getByTestId("header-get-started-btn")).toBeInTheDocument();
     expect(screen.queryByTestId("header-avatar-button")).not.toBeInTheDocument();
+  });
+
+  it("renders with external AuthProvider wrapper without re-wrapping", () => {
+    render(
+      <AuthProvider>
+        <SkillDetailPage />
+      </AuthProvider>
+    );
+    expect(screen.getByTestId("skill-detail-page")).toBeInTheDocument();
   });
 });
