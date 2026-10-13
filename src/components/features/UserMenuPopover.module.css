@@ -1,8 +1,8 @@
-/* UserMenuPopover Styles
- * Exact Figma Node 760:12903 specs: "drop down menu/attending"
- * Width: 200px, background: #FFECD8 (Surface Cream), padding: 16px, gap: 14px
- * Box shadow: 0px 4px 6px -2px rgba(0,0,0,0.06), 0px 12px 16px -4px rgba(0,0,0,0.1)
- * Border: 1px solid #CDB7AE
+/* UserMenuPopover Component Styles
+ * Exact Figma Node 4626:379155 Specs: "User Profile Avatar Dropdown Menu"
+ * Frame: w: 200px, h: 216px, background: #FFECD8 (Surface Cream), padding: 16px
+ * Border: 1px solid #CDB7AE, Radius: 6px
+ * Shadow: inset 0 1px 0 rgba(255, 255, 255, 0.65), 0px 4px 6px -2px rgba(0,0,0,0.06), 0px 16px 24px -4px rgba(0,0,0,0.12)
  */
 
 .popoverContainer {
@@ -11,15 +11,16 @@
   right: 0;
   width: 200px;
   background-color: rgba(255, 236, 216, 0.94);
-  backdrop-filter: blur(24px) saturate(180%);
-  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
   border: 1px solid #CDB7AE;
   border-radius: 6px;
   box-shadow: 
-    inset 0 1px 0 rgba(255, 255, 255, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.65),
+    0px 0px 0px 1px rgba(16, 25, 40, 0.05),
     0px 4px 6px -2px rgba(0, 0, 0, 0.06), 
     0px 16px 24px -4px rgba(0, 0, 0, 0.12);
-  padding: var(--space-lg, 16px);
+  padding: 16px;
   z-index: 1000;
   user-select: none;
   animation: popoverFadeIn 0.18s cubic-bezier(0.16, 1, 0.3, 1);
@@ -40,21 +41,21 @@
 .menuBody {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 10px;
   width: 100%;
 }
 
 .menuGroup {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 4px;
   width: 100%;
 }
 
 .menuItem {
   display: flex;
   align-items: center;
-  gap: var(--space-xs, 8px);
+  gap: 8px;
   width: 100%;
   padding: 6px 8px;
   background: transparent;
@@ -62,12 +63,12 @@
   border-radius: 4px;
   cursor: pointer;
   text-align: left;
-  transition: background-color var(--transition-fast, 150ms ease), transform var(--transition-fast, 150ms ease), color var(--transition-fast, 150ms ease);
+  transition: background-color 0.15s ease, transform 0.15s cubic-bezier(0.16, 1, 0.3, 1), color 0.15s ease;
   box-sizing: border-box;
 }
 
 .menuItem:hover {
-  background-color: var(--color-surface-peach, #FBE1C7);
+  background-color: rgba(0, 0, 0, 0.04);
   transform: translateX(2px);
 }
 
@@ -78,11 +79,11 @@
 .menuItem:focus-visible {
   outline: 2px solid var(--color-brand, #FB6320);
   outline-offset: 1px;
-  background-color: var(--color-surface-peach, #FBE1C7);
+  background-color: rgba(0, 0, 0, 0.04);
 }
 
 .activeItem {
-  background-color: var(--color-surface-peach, #FBE1C7);
+  background-color: rgba(0, 0, 0, 0.04);
   border-left: 2px solid var(--color-brand, #FB6320);
 }
 
@@ -90,87 +91,37 @@
   width: 18px;
   height: 18px;
   flex-shrink: 0;
-  color: #5B606B;
+  color: #171717;
+  display: block;
 }
 
 .itemLabel {
   font-family: var(--font-sans), var(--font-geist-sans), "Geist", -apple-system, BlinkMacSystemFont, sans-serif;
-  font-size: var(--text-sm, 14px);
-  line-height: 1.4em;
+  font-size: 14px;
+  line-height: 20px;
   font-weight: 400;
-  color: var(--color-dark, #000000);
+  color: #000000;
   white-space: nowrap;
 }
 
 .activeItem .itemLabel {
   font-weight: 600;
-  color: var(--color-dark, #000000);
+  color: #000000;
 }
 
 .divider {
   width: 100%;
   height: 0px;
   border: none;
-  border-top: 1px solid #CDB7AE;
-  margin: 0;
+  border-top: 1px solid #DDD2C5;
+  margin: 2px 0;
 }
 
-.logoutItem .itemLabel {
-  color: #D8473B;
-}
-
-.logoutItem .itemIcon {
-  color: #D8473B;
+.logoutItem {
+  /* Exactly matches Figma 4626:379155 typography and tone */
+  color: #000000;
 }
 
 .logoutItem:hover {
-  background-color: rgba(224, 82, 21, 0.12);
-}
-
-.logoutItem:hover .itemLabel {
-  color: var(--color-brand, #FB6320);
-}
-
-/* Extended variant styling */
-.switchGroup {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  width: 100%;
-}
-
-.switchHeader {
-  font-family: var(--font-sans), var(--font-geist-sans), sans-serif;
-  font-size: 12px;
-  line-height: 1.4em;
-  font-weight: 500;
-  color: #C9A272;
-  padding: 0 8px;
-}
-
-.menuItemSubtle {
-  display: flex;
-  align-items: center;
-  width: 100%;
-  padding: 4px 8px;
-  background: transparent;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  text-align: left;
-  transition: background-color var(--transition-fast, 150ms ease), transform var(--transition-fast, 150ms ease);
-}
-
-.menuItemSubtle:hover {
-  background-color: var(--color-surface-peach, #FBE1C7);
-  transform: translateX(2px);
-}
-
-.menuItemSubtle:active {
-  transform: scale(0.96);
-}
-
-.menuItemSubtle:focus-visible {
-  outline: 2px solid var(--color-brand, #FB6320);
-  outline-offset: 1px;
+  background-color: rgba(0, 0, 0, 0.04);
 }

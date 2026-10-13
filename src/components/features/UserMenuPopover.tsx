@@ -1,35 +1,22 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
-import {
-  User,
-  Settings,
-  HelpCircle,
-  LogOut,
-} from "lucide-react";
-import { BookmarkIcon } from "../ui/BookmarkIcon";
+import React, { useRef, useEffect } from "react";
 import styles from "./UserMenuPopover.module.css";
 
-export type UserMenuItemId =
-  | "bookmarks"
-  | "profile"
-  | "settings"
-  | "help"
-  | "logout"
-  | "host"
-  | "service-provider"
-  | "my-listings";
+import {
+  ReceiptText,
+  CircleUser,
+  Settings,
+  CircleHelp,
+  LogOut,
+} from "lucide-react";
 
 export interface UserMenuPopoverProps {
-  /**
-   * Dropdown variant.
-   * "attending" matches Figma Node 760:12903 ("drop down menu/attending")
-   * "extended" matches Figma Node 753:11852 (includes Switch to section)
-   */
   variant?: "attending" | "extended";
-  activeItem?: UserMenuItemId | string;
+  activeItem?: "my-skills" | "bookmarks" | "directory-history" | "profile" | "settings" | "help" | string;
+  onMySkills?: () => void;
   onBookmarks?: () => void;
-  onDirectoryHistory?: () => void; // alias for backwards compatibility
+  onDirectoryHistory?: () => void;
   onProfile?: () => void;
   onAccountSettings?: () => void;
   onHelpCenter?: () => void;
@@ -45,6 +32,7 @@ export interface UserMenuPopoverProps {
 export const UserMenuPopover: React.FC<UserMenuPopoverProps> = ({
   variant = "attending",
   activeItem,
+  onMySkills,
   onBookmarks,
   onDirectoryHistory,
   onProfile,
@@ -125,8 +113,10 @@ export const UserMenuPopover: React.FC<UserMenuPopoverProps> = ({
     }
   };
 
-  const handleBookmarksClick = () => {
-    if (onBookmarks) {
+  const handleMySkillsClick = () => {
+    if (onMySkills) {
+      onMySkills();
+    } else if (onBookmarks) {
       onBookmarks();
     } else if (onDirectoryHistory) {
       onDirectoryHistory();
@@ -141,6 +131,11 @@ export const UserMenuPopover: React.FC<UserMenuPopoverProps> = ({
     }
   };
 
+  const mySkillsLabel =
+    variant === "extended" && onDirectoryHistory && !onMySkills && !onBookmarks
+      ? "Directory history"
+      : "My Skills";
+
   return (
     <div
       ref={containerRef}
@@ -153,27 +148,24 @@ export const UserMenuPopover: React.FC<UserMenuPopoverProps> = ({
       onKeyDown={handleKeyDown}
     >
       <div className={styles.menuBody}>
-        {/* Section 1: Bookmarks / Directory history & Profile (Figma 760:12907) */}
+        {/* Section 1: My Skills & Profile (Figma Node 4626:379155) */}
         <div className={styles.menuGroup} role="group" aria-label="Personal items">
           <button
             ref={registerItem}
             type="button"
             className={`${styles.menuItem} ${
-              activeItem === "bookmarks" || activeItem === "directory-history"
+              activeItem === "my-skills" || activeItem === "bookmarks" || activeItem === "directory-history"
                 ? styles.activeItem
                 : ""
             }`}
             role="menuitem"
             tabIndex={0}
-            onClick={handleBookmarksClick}
-            data-testid="user-menu-item-bookmarks"
+            onClick={handleMySkillsClick}
+            data-testid="user-menu-item-my-skills"
+            aria-label={mySkillsLabel}
           >
-            <BookmarkIcon size={18} className={styles.itemIcon} aria-hidden="true" />
-            <span className={styles.itemLabel}>
-              {variant === "extended" && onDirectoryHistory && !onBookmarks
-                ? "Directory history"
-                : "Bookmarks"}
-            </span>
+            <ReceiptText size={18} strokeWidth={1.5} className={styles.itemIcon} aria-hidden="true" />
+            <span className={styles.itemLabel}>{mySkillsLabel}</span>
           </button>
 
           <button
@@ -186,16 +178,17 @@ export const UserMenuPopover: React.FC<UserMenuPopoverProps> = ({
             tabIndex={0}
             onClick={onProfile}
             data-testid="user-menu-item-profile"
+            aria-label="Profile"
           >
-            <User size={18} className={styles.itemIcon} aria-hidden="true" />
+            <CircleUser size={18} strokeWidth={1.5} className={styles.itemIcon} aria-hidden="true" />
             <span className={styles.itemLabel}>Profile</span>
           </button>
         </div>
 
-        {/* Divider 1 (Figma Node 760:12973) */}
+        {/* Divider 1 */}
         <hr className={styles.divider} aria-hidden="true" />
 
-        {/* Section 2: Account settings & Help center (Figma 760:12978, 760:12981) */}
+        {/* Section 2: Account settings & Help center (Figma Node 4626:379155) */}
         <div className={styles.menuGroup} role="group" aria-label="Preferences and Help">
           <button
             ref={registerItem}
@@ -207,8 +200,9 @@ export const UserMenuPopover: React.FC<UserMenuPopoverProps> = ({
             tabIndex={0}
             onClick={onAccountSettings}
             data-testid="user-menu-item-settings"
+            aria-label="Account settings"
           >
-            <Settings size={18} className={styles.itemIcon} aria-hidden="true" />
+            <Settings size={18} strokeWidth={1.5} className={styles.itemIcon} aria-hidden="true" />
             <span className={styles.itemLabel}>Account settings</span>
           </button>
 
@@ -222,61 +216,17 @@ export const UserMenuPopover: React.FC<UserMenuPopoverProps> = ({
             tabIndex={0}
             onClick={onHelpCenter}
             data-testid="user-menu-item-help"
+            aria-label="Help center"
           >
-            <HelpCircle size={18} className={styles.itemIcon} aria-hidden="true" />
+            <CircleHelp size={18} strokeWidth={1.5} className={styles.itemIcon} aria-hidden="true" />
             <span className={styles.itemLabel}>Help center</span>
           </button>
         </div>
 
-        {/* Section 3: Switch to (Commented out until creators / host mode are introduced to the platform) */}
-        {/*
-        {variant === "extended" && (
-          <>
-            <hr className={styles.divider} aria-hidden="true" />
-            <div className={styles.switchGroup} role="group" aria-label="Switch account mode">
-              <span className={styles.switchHeader}>Switch to</span>
-
-              <button
-                ref={registerItem}
-                type="button"
-                className={styles.menuItemSubtle}
-                role="menuitem"
-                tabIndex={0}
-                onClick={onSwitchHost}
-              >
-                <span className={styles.itemLabel}>Host</span>
-              </button>
-
-              <button
-                ref={registerItem}
-                type="button"
-                className={styles.menuItemSubtle}
-                role="menuitem"
-                tabIndex={0}
-                onClick={onSwitchServiceProvider}
-              >
-                <span className={styles.itemLabel}>Service Provider</span>
-              </button>
-
-              <button
-                ref={registerItem}
-                type="button"
-                className={styles.menuItemSubtle}
-                role="menuitem"
-                tabIndex={0}
-                onClick={onMyListings}
-              >
-                <span className={styles.itemLabel}>My Listings &amp; Services</span>
-              </button>
-            </div>
-          </>
-        )}
-        */}
-
-        {/* Divider 2 (Figma Node 760:13003) */}
+        {/* Divider 2 */}
         <hr className={styles.divider} aria-hidden="true" />
 
-        {/* Section 4: Logout (Figma Node 760:13028 / 760:13041) */}
+        {/* Section 3: Logout (Figma Node 4626:379155) */}
         <div className={styles.menuGroup} role="group" aria-label="Session">
           <button
             ref={registerItem}
@@ -286,8 +236,9 @@ export const UserMenuPopover: React.FC<UserMenuPopoverProps> = ({
             tabIndex={0}
             onClick={onLogout}
             data-testid="user-menu-item-logout"
+            aria-label="Logout"
           >
-            <LogOut size={18} className={styles.itemIcon} aria-hidden="true" />
+            <LogOut size={18} strokeWidth={1.5} className={styles.itemIcon} aria-hidden="true" />
             <span className={styles.itemLabel}>Logout</span>
           </button>
         </div>

@@ -71,9 +71,16 @@ export const NavBar: React.FC<NavBarProps> = ({
   const [categoriesOpen, setCategoriesOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setIsMounted(true);
+  }, []);
 
   const auth = useAuthSafe();
-  const isSignedIn = propIsSignedIn !== undefined ? propIsSignedIn : (auth?.isSignedIn ?? false);
+  const effectiveSignedIn = propIsSignedIn !== undefined ? propIsSignedIn : (auth?.isSignedIn ?? false);
+  const isSignedIn = isMounted ? effectiveSignedIn : (propIsSignedIn ?? false);
   const user = propUser || auth?.user || {
     name: "Alex Vance",
     email: "alex@skillhouse.ai",
@@ -321,6 +328,10 @@ export const NavBar: React.FC<NavBarProps> = ({
               {userMenuOpen && (
                 <UserMenuPopover
                   variant="attending"
+                  onMySkills={() => {
+                    setUserMenuOpen(false);
+                    onViewChange?.("my-skills");
+                  }}
                   onBookmarks={() => {
                     setUserMenuOpen(false);
                     onViewChange?.("my-skills");

@@ -62,3 +62,4 @@ AGENTS.md
 *.json.dump
 figma_*.json
 public/figma/*ground-truth*
+.raw_dumps/

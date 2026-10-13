@@ -6,19 +6,8 @@
   top: 0;
   z-index: 1000;
   box-sizing: border-box;
-  background-color: transparent;
+  background-color: #FFEEDD;
   transition: border-color var(--transition-fast);
-}
-
-.header::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background-color: rgba(255, 238, 221, 0.88);
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
-  z-index: -1;
-  pointer-events: none;
 }
 
 .container {

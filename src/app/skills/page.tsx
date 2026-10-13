@@ -17,6 +17,7 @@ function SkillsPageContent() {
     searchParams.get("use-case") ||
     "";
   const searchParam = searchParams.get("search") || searchParams.get("q") || "";
+  const loadingParam = searchParams.get("loading");
 
   // If a specific skill ID is requested via query param, display the full detail screen
   if (idParam) {
@@ -55,6 +56,7 @@ function SkillsPageContent() {
 
   return (
     <MarketplaceView
+      isLoading={loadingParam === "true" || loadingParam === "1" ? true : undefined}
       initialCategory={categoryParam}
       initialSearch={searchParam}
       onNavigateHome={() => router.push("/")}

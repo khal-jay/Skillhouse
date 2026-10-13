@@ -4,9 +4,9 @@ import React, {
   createContext,
   useContext,
   useState,
-  useEffect,
   useCallback,
   useMemo,
+  useSyncExternalStore,
 } from "react";
 import { UserProfileData } from "@/components/features/UserProfileModal";
 import { LoginModal } from "@/components/features/LoginModal";
@@ -48,6 +48,35 @@ export interface AuthContextType {
 
 export const AuthContext = createContext<AuthContextType | null>(null);
 
+let cachedUserRaw: string | null = null;
+let cachedUserParsed: UserProfileData | null = null;
+
+export function subscribeAuth(callback: () => void): () => void {
+  window.addEventListener("storage", callback);
+  window.addEventListener(AUTH_CHANGE_EVENT, callback);
+  return () => {
+    window.removeEventListener("storage", callback);
+    window.removeEventListener(AUTH_CHANGE_EVENT, callback);
+  };
+}
+
+export function getAuthSnapshot(): UserProfileData | null {
+  if (typeof window === "undefined") return null;
+  try {
+    const raw = window.localStorage.getItem(STORAGE_KEY_AUTH_USER);
+    if (raw === cachedUserRaw) return cachedUserParsed;
+    cachedUserRaw = raw;
+    cachedUserParsed = raw ? JSON.parse(raw) : null;
+    return cachedUserParsed;
+  } catch {
+    return null;
+  }
+}
+
+export function getServerAuthSnapshot(): UserProfileData | null {
+  return null;
+}
+
 export function AuthModals() {
   const auth = useContext(AuthContext);
   if (!auth) return null;
@@ -84,47 +113,17 @@ export function AuthModals() {
 }
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<UserProfileData | null>(() => {
-    if (typeof window !== "undefined") {
-      try {
-        const stored = window.localStorage.getItem(STORAGE_KEY_AUTH_USER);
-        if (stored) return JSON.parse(stored);
-      } catch {
-        // Fallback on JSON parse error
-      }
-    }
-    return null;
-  });
+  const user = useSyncExternalStore(
+    subscribeAuth,
+    getAuthSnapshot,
+    getServerAuthSnapshot
+  );
 
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [profileTab, setProfileTab] = useState<"profile" | "cli" | "settings">("profile");
   const [isHelpCenterOpen, setIsHelpCenterOpen] = useState(false);
   const [isRequestSkillOpen, setIsRequestSkillOpen] = useState(false);
-
-  // Sync state with localStorage events across tabs/components
-  useEffect(() => {
-    const handleStorageChange = () => {
-      try {
-        const stored = window.localStorage.getItem(STORAGE_KEY_AUTH_USER);
-        if (stored) {
-          setUser(JSON.parse(stored));
-        } else {
-          setUser(null);
-        }
-      } catch {
-        // Ignore
-      }
-    };
-
-    window.addEventListener("storage", handleStorageChange);
-    window.addEventListener(AUTH_CHANGE_EVENT, handleStorageChange);
-
-    return () => {
-      window.removeEventListener("storage", handleStorageChange);
-      window.removeEventListener(AUTH_CHANGE_EVENT, handleStorageChange);
-    };
-  }, []);
 
   const login = useCallback((provider: "google" | "github" = "google") => {
     const newUser: UserProfileData = {
@@ -136,7 +135,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       apiKey: "sk-live-sh-98f23c7b1a0e",
     };
 
-    setUser(newUser);
     try {
       if (typeof window !== "undefined") {
         window.localStorage.setItem(STORAGE_KEY_AUTH_USER, JSON.stringify(newUser));
@@ -149,7 +147,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const logout = useCallback(() => {
-    setUser(null);
     try {
       if (typeof window !== "undefined") {
         window.localStorage.removeItem(STORAGE_KEY_AUTH_USER);

@@ -37,7 +37,7 @@ describe("CategorySkillCard (Figma Node 751:4797)", () => {
   });
 
   it("renders Lucide ArrowUpRight icon inside action button", () => {
-    const { container } = render(
+    render(
       <CategorySkillCard
         title="Free Agent Skills"
       />

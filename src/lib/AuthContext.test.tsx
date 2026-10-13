@@ -3,10 +3,13 @@ import { render, screen, fireEvent, renderHook, act } from "@testing-library/rea
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import {
   AuthProvider,
+  AuthModals,
   useAuth,
   useAuthSafe,
   STORAGE_KEY_AUTH_USER,
   AUTH_CHANGE_EVENT,
+  getServerAuthSnapshot,
+  getAuthSnapshot,
 } from "./AuthContext";
 
 describe("AuthContext and AuthProvider", () => {
@@ -15,7 +18,6 @@ describe("AuthContext and AuthProvider", () => {
   });
 
   it("throws error when useAuth is called outside AuthProvider", () => {
-    // Suppress console.error for expected thrown error
     const spy = vi.spyOn(console, "error").mockImplementation(() => {});
     expect(() => renderHook(() => useAuth())).toThrow(
       "useAuth must be used within an AuthProvider"
@@ -26,6 +28,10 @@ describe("AuthContext and AuthProvider", () => {
   it("returns null when useAuthSafe is called outside AuthProvider", () => {
     const { result } = renderHook(() => useAuthSafe());
     expect(result.current).toBeNull();
+  });
+
+  it("returns null from getServerAuthSnapshot for SSR hydration matching", () => {
+    expect(getServerAuthSnapshot()).toBeNull();
   });
 
   it("initializes with null user when localStorage is empty", () => {
@@ -43,6 +49,9 @@ describe("AuthContext and AuthProvider", () => {
       name: "Alex Vance",
       email: "alex@acme.dev",
       avatarUrl: "/figma/avatar.png",
+      role: "Principal AI Engineer",
+      provider: "google" as const,
+      apiKey: "sk-live-sh-98f23c7b1a0e",
     };
     localStorage.setItem(STORAGE_KEY_AUTH_USER, JSON.stringify(mockUser));
 
@@ -159,7 +168,14 @@ describe("AuthContext and AuthProvider", () => {
     );
     const { result } = renderHook(() => useAuth(), { wrapper });
 
-    const newUser = { name: "Remote Vance", email: "remote@acme.dev" };
+    const newUser = {
+      name: "Remote Vance",
+      email: "remote@acme.dev",
+      role: "Dev",
+      provider: "google" as const,
+      apiKey: "key",
+      avatarUrl: "/figma/avatar.png",
+    };
     localStorage.setItem(STORAGE_KEY_AUTH_USER, JSON.stringify(newUser));
 
     act(() => {
@@ -174,6 +190,16 @@ describe("AuthContext and AuthProvider", () => {
     });
 
     expect(result.current.user).toBeNull();
+  });
+
+  it("handles corrupted auth user JSON gracefully", () => {
+    localStorage.setItem(STORAGE_KEY_AUTH_USER, "{invalid-auth-json");
+    expect(getAuthSnapshot()).toBeNull();
+  });
+
+  it("renders null for AuthModals when rendered outside AuthProvider", () => {
+    const { container } = render(<AuthModals />);
+    expect(container.firstChild).toBeNull();
   });
 
   it("renders AuthModals inside AuthProvider and wires up actions", () => {

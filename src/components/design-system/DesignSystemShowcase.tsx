@@ -1184,7 +1184,7 @@ export const DesignSystemShowcase: React.FC = () => {
         <div className={styles.sectionHeader}>
           <h2 className={styles.sectionTitle}>
             15. User Profile Dropdown Menu &amp; Interactive States
-            <span className={styles.nodeBadge}>Node 760:12903 (drop down menu/attending)</span>
+            <span className={styles.nodeBadge}>Figma Node 4626:379155 (drop down menu/attending)</span>
           </h2>
           <p className={styles.sectionDesc}>
             Authentic attending user dropdown menu matching Figma Node 760:12903: fixed <code>200px</code> width, <code>#FFECD8</code> surface cream background, <code>16px</code> padding, dual elevation shadow (<code>0px 4px 6px -2px rgba(0,0,0,0.06), 0px 12px 16px -4px rgba(0,0,0,0.1)</code>), 18px vector icons, 1px dividers, press micro-interaction (scale 0.96), and full keyboard navigation.
@@ -1199,7 +1199,8 @@ export const DesignSystemShowcase: React.FC = () => {
                 variant={demoUserMenuVariant}
                 activeItem={demoUserMenuActiveItem}
                 className={styles.popoverStaticWrapper}
-                onBookmarks={() => setDemoUserMenuFeedback("Navigating to Bookmarks...")}
+                onMySkills={() => setDemoUserMenuFeedback("Navigating to My Skills...")}
+                onBookmarks={() => setDemoUserMenuFeedback("Navigating to My Skills...")}
                 onDirectoryHistory={() => setDemoUserMenuFeedback("Navigating to Directory history...")}
                 onProfile={() => setDemoUserMenuFeedback("Opening User Profile...")}
                 onAccountSettings={() => setDemoUserMenuFeedback("Opening Account settings...")}

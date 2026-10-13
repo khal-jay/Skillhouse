@@ -2,7 +2,7 @@
 
 import React, { useState, useMemo, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { ChevronDown, Filter as FilterIcon, SlidersHorizontal } from "lucide-react";
+import { ChevronDown, Filter as FilterIcon, SlidersHorizontal, RefreshCw } from "lucide-react";
 import { NavBar } from "@/components/features/NavBar";
 import { useAuthSafe } from "@/lib/AuthContext";
 import { FilterSidebar, FilterState } from "@/components/features/FilterSidebar";
@@ -882,21 +882,42 @@ export function MarketplaceView({
 
   const isTestEnv = typeof process !== "undefined" && process.env.NODE_ENV === "test";
 
+  // Check if ?loading=true is in the URL to keep skeleton on-screen indefinitely for inspection
+  const isUrlLoading = typeof window !== "undefined" && (new URLSearchParams(window.location.search).get("loading") === "true" || new URLSearchParams(window.location.search).get("loading") === "1");
+
   // Initial loading state: displays greyscale skeleton cards during initial catalogue load
   const [isInitialLoading, setIsInitialLoading] = useState(() => {
     if (propIsLoading !== undefined) return propIsLoading;
+    if (isUrlLoading) return true;
     return !isTestEnv;
   });
 
+  const [isFilterLoading, setIsFilterLoading] = useState(false);
+
   useEffect(() => {
-    if (isTestEnv || propIsLoading !== undefined) return;
+    if (isTestEnv || propIsLoading !== undefined || isUrlLoading) return;
     const timer = setTimeout(() => {
       setIsInitialLoading(false);
-    }, 750);
+    }, 1200);
     return () => clearTimeout(timer);
-  }, [propIsLoading, isTestEnv]);
+  }, [propIsLoading, isTestEnv, isUrlLoading]);
 
-  const effectiveLoading = propIsLoading !== undefined ? propIsLoading : isInitialLoading;
+  const effectiveLoading = isFilterLoading || (propIsLoading !== undefined ? propIsLoading : (isInitialLoading || isUrlLoading));
+
+  const handleSimulateLoading = () => {
+    setIsFilterLoading(true);
+    setTimeout(() => {
+      setIsFilterLoading(false);
+    }, 1500);
+  };
+
+  const handleFilterChange = (newFilters: FilterState) => {
+    if (!isTestEnv) {
+      setIsFilterLoading(true);
+      setTimeout(() => setIsFilterLoading(false), 450);
+    }
+    setFilters(newFilters);
+  };
 
   // Infinite Scroll Pagination
   const PAGE_SIZE = 8;
@@ -917,7 +938,6 @@ export function MarketplaceView({
   // Keep filters synchronized if initialCategory changes
   useEffect(() => {
     if (initialCategory) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
       setFilters(resolveCategoryToFilters(initialCategory));
     }
   }, [initialCategory]);
@@ -958,8 +978,8 @@ export function MarketplaceView({
 
   const handleSelectCategoryFromNav = (cat: string, tab?: string) => {
     if (!isTestEnv) {
-      setIsInitialLoading(true);
-      setTimeout(() => setIsInitialLoading(false), 350);
+      setIsFilterLoading(true);
+      setTimeout(() => setIsFilterLoading(false), 450);
     }
     setFilters(resolveCategoryToFilters(cat, tab));
     if (typeof window !== "undefined") {
@@ -1079,10 +1099,10 @@ export function MarketplaceView({
           setTimeout(() => {
             setVisibleCount((prev) => Math.min(prev + PAGE_SIZE, gridItems.length));
             setIsLoadingMore(false);
-          }, 350);
+          }, 650);
         }
       },
-      { rootMargin: "300px", threshold: 0.1 }
+      { rootMargin: "100px", threshold: 0.1 }
     );
 
     observer.observe(sentinel);
@@ -1095,7 +1115,7 @@ export function MarketplaceView({
     setTimeout(() => {
       setVisibleCount((prev) => Math.min(prev + PAGE_SIZE, gridItems.length));
       setIsLoadingMore(false);
-    }, 250);
+    }, 600);
   };
 
   const displayedGridItems = gridItems.slice(0, visibleCount);
@@ -1188,7 +1208,7 @@ export function MarketplaceView({
         >
           <FilterSidebar
             filters={filters}
-            onFilterChange={setFilters}
+            onFilterChange={handleFilterChange}
             onToggleCollapse={() => setIsSidebarCollapsed(true)}
             isCollapsed={isSidebarCollapsed}
           />
@@ -1293,6 +1313,18 @@ export function MarketplaceView({
                 </div>
               )}
               </div>
+
+              <button
+                type="button"
+                className={styles.simulateLoadingBtn}
+                onClick={handleSimulateLoading}
+                title="Preview greyscale skeleton loading state"
+                aria-label="Simulate loading state"
+                data-testid="simulate-loading-btn"
+              >
+                <RefreshCw size={13} className={effectiveLoading ? styles.spinning : ""} aria-hidden="true" />
+                <span>Simulate loading</span>
+              </button>
 
               {isSidebarCollapsed && (
                 <button

@@ -306,4 +306,36 @@ describe("Features MarketplaceView Component (Figma Node 751:4572)", () => {
     rerender(<MarketplaceView isLoading={false} />);
     expect(screen.queryByTestId("skill-card-skeleton")).not.toBeInTheDocument();
   });
+
+  it("triggers simulate loading button and displays greyscale skeleton cards", () => {
+    render(<MarketplaceView isLoading={false} />);
+
+    const simulateBtn = screen.getByTestId("simulate-loading-btn");
+    expect(simulateBtn).toBeInTheDocument();
+    fireEvent.click(simulateBtn);
+
+    const skeletons = screen.getAllByTestId("skill-card-skeleton");
+    expect(skeletons.length).toBe(8);
+  });
+
+  it("handles opening login and request skill modals and signing in without auth provider", () => {
+    render(<MarketplaceView />);
+
+    // Click Get started in navbar to open login modal
+    const getStartedBtn = screen.getByTestId("header-get-started-btn");
+    fireEvent.click(getStartedBtn);
+    expect(screen.getByRole("dialog", { name: /welcome to skillhouse/i })).toBeInTheDocument();
+
+    // Login via modal
+    const googleBtn = screen.getByRole("button", { name: /continue with google/i });
+    fireEvent.click(googleBtn);
+
+    // Modal closes and user is signed in
+    expect(screen.queryByRole("dialog", { name: /welcome to skillhouse/i })).not.toBeInTheDocument();
+
+    // Click Request a skill to open request modal
+    const requestSkillBtn = screen.getByTestId("header-request-skill-action-btn");
+    fireEvent.click(requestSkillBtn);
+    expect(screen.getByRole("dialog", { name: /^request a skill$/i })).toBeInTheDocument();
+  });
 });

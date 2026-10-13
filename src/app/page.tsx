@@ -26,6 +26,7 @@ function MainContent() {
   const categoryParam = searchParams.get("category") || "";
   const viewParam = searchParams.get("view") || "";
   const searchParam = searchParams.get("search") || searchParams.get("q") || "";
+  const loadingParam = searchParams.get("loading");
 
   const [activeViewOverride, setActiveViewOverride] = useState<
     "home" | "marketplace" | "my-skills" | null
@@ -69,15 +70,7 @@ function MainContent() {
 
   const [requestSkillPrefill, setRequestSkillPrefill] = useState<string | undefined>(undefined);
 
-  const [localUser, setLocalUser] = useState<UserProfileData | null>(() => {
-    if (typeof window === "undefined") return null;
-    try {
-      const stored = localStorage.getItem("skillhouse_user");
-      return stored ? JSON.parse(stored) : null;
-    } catch {
-      return null;
-    }
-  });
+  const [localUser, setLocalUser] = useState<UserProfileData | null>(null);
   const user = auth ? auth.user : localUser;
 
   const [localProfileOpen, setLocalProfileOpen] = useState(false);
@@ -337,6 +330,7 @@ function MainContent() {
     return (
       <>
         <MarketplaceView
+          isLoading={loadingParam === "true" || loadingParam === "1" ? true : undefined}
           initialCategory={selectedCategory}
           initialSearch={searchValue}
           onNavigateHome={navigateHome}

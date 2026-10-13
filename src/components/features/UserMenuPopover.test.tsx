@@ -3,11 +3,11 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import { describe, it, expect, vi } from "vitest";
 import { UserMenuPopover } from "./UserMenuPopover";
 
-describe("UserMenuPopover Component (Node 760:12903)", () => {
-  it("renders all items from Figma Node 760:12903 (drop down menu/attending)", () => {
+describe("UserMenuPopover Component (Figma Node 4626:379155)", () => {
+  it("renders all items from Figma Node 4626:379155 (drop down menu/attending)", () => {
     render(<UserMenuPopover />);
 
-    expect(screen.getByText("Bookmarks")).toBeInTheDocument();
+    expect(screen.getByText("My Skills")).toBeInTheDocument();
     expect(screen.getByText("Profile")).toBeInTheDocument();
     expect(screen.getByText("Account settings")).toBeInTheDocument();
     expect(screen.getByText("Help center")).toBeInTheDocument();
@@ -17,23 +17,18 @@ describe("UserMenuPopover Component (Node 760:12903)", () => {
     expect(screen.queryByText("Switch to")).not.toBeInTheDocument();
   });
 
-  it("renders extended items when variant is extended (Node 753:11852), with Switch to disabled until creators launch", () => {
+  it("renders extended items when variant is extended, with Directory history label fallback", () => {
     render(<UserMenuPopover variant="extended" onDirectoryHistory={() => {}} />);
 
     expect(screen.getByText("Directory history")).toBeInTheDocument();
     expect(screen.getByText("Profile")).toBeInTheDocument();
     expect(screen.getByText("Account settings")).toBeInTheDocument();
     expect(screen.getByText("Help center")).toBeInTheDocument();
-    // Switch to section is commented out until creators are introduced
-    expect(screen.queryByText("Switch to")).not.toBeInTheDocument();
-    expect(screen.queryByText("Host")).not.toBeInTheDocument();
-    expect(screen.queryByText("Service Provider")).not.toBeInTheDocument();
-    expect(screen.queryByText("My Listings & Services")).not.toBeInTheDocument();
     expect(screen.getByText("Logout")).toBeInTheDocument();
   });
 
   it("triggers callbacks when menu items are clicked", () => {
-    const handleBookmarks = vi.fn();
+    const handleMySkills = vi.fn();
     const handleProfile = vi.fn();
     const handleSettings = vi.fn();
     const handleHelp = vi.fn();
@@ -41,7 +36,7 @@ describe("UserMenuPopover Component (Node 760:12903)", () => {
 
     render(
       <UserMenuPopover
-        onBookmarks={handleBookmarks}
+        onMySkills={handleMySkills}
         onProfile={handleProfile}
         onAccountSettings={handleSettings}
         onHelpCenter={handleHelp}
@@ -49,8 +44,8 @@ describe("UserMenuPopover Component (Node 760:12903)", () => {
       />
     );
 
-    fireEvent.click(screen.getByText("Bookmarks"));
-    expect(handleBookmarks).toHaveBeenCalledTimes(1);
+    fireEvent.click(screen.getByText("My Skills"));
+    expect(handleMySkills).toHaveBeenCalledTimes(1);
 
     fireEvent.click(screen.getByText("Profile"));
     expect(handleProfile).toHaveBeenCalledTimes(1);
@@ -65,34 +60,42 @@ describe("UserMenuPopover Component (Node 760:12903)", () => {
     expect(handleLogout).toHaveBeenCalledTimes(1);
   });
 
+  it("supports onBookmarks fallback for My Skills item", () => {
+    const handleBookmarks = vi.fn();
+    render(<UserMenuPopover onBookmarks={handleBookmarks} />);
+
+    fireEvent.click(screen.getByText("My Skills"));
+    expect(handleBookmarks).toHaveBeenCalledTimes(1);
+  });
+
   it("supports keyboard navigation with ArrowDown, ArrowUp, Home, End, Escape", () => {
     const handleClose = vi.fn();
     render(<UserMenuPopover onClose={handleClose} />);
 
     const menu = screen.getByRole("menu");
-    const bookmarksBtn = screen.getByTestId("user-menu-item-bookmarks");
+    const mySkillsBtn = screen.getByTestId("user-menu-item-my-skills");
     const profileBtn = screen.getByTestId("user-menu-item-profile");
     const logoutBtn = screen.getByTestId("user-menu-item-logout");
 
-    // Start with bookmarks focused
-    bookmarksBtn.focus();
-    expect(document.activeElement).toBe(bookmarksBtn);
+    // Start with My Skills focused
+    mySkillsBtn.focus();
+    expect(document.activeElement).toBe(mySkillsBtn);
 
     // ArrowDown moves to Profile
     fireEvent.keyDown(menu, { key: "ArrowDown" });
     expect(document.activeElement).toBe(profileBtn);
 
-    // ArrowUp moves back to Bookmarks
+    // ArrowUp moves back to My Skills
     fireEvent.keyDown(menu, { key: "ArrowUp" });
-    expect(document.activeElement).toBe(bookmarksBtn);
+    expect(document.activeElement).toBe(mySkillsBtn);
 
     // End moves to Logout
     fireEvent.keyDown(menu, { key: "End" });
     expect(document.activeElement).toBe(logoutBtn);
 
-    // Home moves back to Bookmarks
+    // Home moves back to My Skills
     fireEvent.keyDown(menu, { key: "Home" });
-    expect(document.activeElement).toBe(bookmarksBtn);
+    expect(document.activeElement).toBe(mySkillsBtn);
 
     // Escape triggers onClose
     fireEvent.keyDown(menu, { key: "Escape" });
@@ -100,9 +103,9 @@ describe("UserMenuPopover Component (Node 760:12903)", () => {
   });
 
   it("renders active item indicator when activeItem is specified", () => {
-    render(<UserMenuPopover activeItem="bookmarks" />);
-    const bookmarksBtn = screen.getByTestId("user-menu-item-bookmarks");
-    expect(bookmarksBtn.className).toContain("activeItem");
+    render(<UserMenuPopover activeItem="my-skills" />);
+    const mySkillsBtn = screen.getByTestId("user-menu-item-my-skills");
+    expect(mySkillsBtn.className).toContain("activeItem");
   });
 
   it("calls onClose on outside click", () => {
@@ -117,11 +120,12 @@ describe("UserMenuPopover Component (Node 760:12903)", () => {
     fireEvent.mouseDown(screen.getByTestId("outside"));
     expect(handleClose).toHaveBeenCalledTimes(1);
   });
-  it("handles directory history click when onBookmarks is omitted", () => {
+
+  it("handles directory history click when onMySkills and onBookmarks are omitted", () => {
     const handleHistory = vi.fn();
     render(<UserMenuPopover variant="extended" onDirectoryHistory={handleHistory} />);
 
-    const dirItem = screen.getByTestId("user-menu-item-bookmarks");
+    const dirItem = screen.getByTestId("user-menu-item-my-skills");
     fireEvent.click(dirItem);
     expect(handleHistory).toHaveBeenCalledTimes(1);
   });
@@ -129,14 +133,14 @@ describe("UserMenuPopover Component (Node 760:12903)", () => {
   it("handles ArrowUp and ArrowDown when no element is focused", () => {
     render(<UserMenuPopover />);
     const menu = screen.getByRole("menu");
-    const bookmarksBtn = screen.getByTestId("user-menu-item-bookmarks");
+    const mySkillsBtn = screen.getByTestId("user-menu-item-my-skills");
     const logoutBtn = screen.getByTestId("user-menu-item-logout");
 
     // Blur active element
     (document.activeElement as HTMLElement)?.blur();
 
     fireEvent.keyDown(menu, { key: "ArrowDown" });
-    expect(document.activeElement).toBe(bookmarksBtn);
+    expect(document.activeElement).toBe(mySkillsBtn);
 
     (document.activeElement as HTMLElement)?.blur();
     fireEvent.keyDown(menu, { key: "ArrowUp" });

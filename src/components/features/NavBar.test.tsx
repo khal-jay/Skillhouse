@@ -137,7 +137,7 @@ describe("Features NavBar Component", () => {
 
     // Open user menu
     fireEvent.click(avatarBtn);
-    expect(screen.getByText("Bookmarks")).toBeInTheDocument();
+    expect(screen.getByText(/my skills|bookmarks/i)).toBeInTheDocument();
     expect(screen.getByText("Profile")).toBeInTheDocument();
 
     // Click Logout
@@ -177,7 +177,7 @@ describe("Features NavBar Component", () => {
 
     // Reopen and test Bookmarks
     fireEvent.click(avatarBtn);
-    fireEvent.click(screen.getByText("Bookmarks"));
+    fireEvent.click(screen.getByText(/my skills|bookmarks/i));
     expect(screen.queryByRole("menu")).not.toBeInTheDocument();
 
     // Click square action button
@@ -323,7 +323,7 @@ describe("Features NavBar Component", () => {
     // 1. Open User Menu Popover and click Bookmarks
     const avatarBtn = screen.getByTestId("header-avatar-button");
     fireEvent.click(avatarBtn);
-    const bookmarksItem = screen.getByRole("menuitem", { name: /bookmarks/i });
+    const bookmarksItem = screen.getByRole("menuitem", { name: /my skills|bookmarks/i });
     fireEvent.click(bookmarksItem);
     expect(handleViewChange).toHaveBeenCalledWith("my-skills");
 

@@ -3,7 +3,6 @@
 import React, { useState } from "react";
 import { CategorySkillCard } from "@/components/features/CategorySkillCard";
 import { CategorySkillGrid } from "@/components/features/CategorySkillGrid";
-import { Button } from "@/components/ui/Button";
 
 export default function CategoryMobilePage() {
   const [selectedCat, setSelectedCat] = useState<string>("");

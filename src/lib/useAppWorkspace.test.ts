@@ -1,10 +1,14 @@
 import { renderHook, act } from "@testing-library/react";
 import { describe, it, expect, beforeEach } from "vitest";
-import { useAppWorkspace } from "./useAppWorkspace";
+import { useAppWorkspace, getServerSnapshot } from "./useAppWorkspace";
 
 describe("useAppWorkspace Hook", () => {
   beforeEach(() => {
     window.localStorage.clear();
+  });
+
+  it("returns empty array from getServerSnapshot for SSR hydration matching", () => {
+    expect(getServerSnapshot()).toEqual([]);
   });
 
   it("initializes empty and toggles bookmarks with localStorage persistence", () => {
