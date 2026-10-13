@@ -114,7 +114,25 @@ export const SkillCard: React.FC<SkillCardProps> = ({
     onBookmarkToggle?.(nextState);
   };
 
-  const gradient = accentGradient || getCardGradient(id || title);
+  const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      return;
+    }
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width - 0.5;
+    const y = (e.clientY - rect.top) / rect.height - 0.5;
+    e.currentTarget.style.setProperty("--tilt-x", `${(-y * 2.5).toFixed(2)}deg`);
+    e.currentTarget.style.setProperty("--tilt-y", `${(x * 2.5).toFixed(2)}deg`);
+    e.currentTarget.style.setProperty("--tilt-lift", "-5px");
+  };
+
+  const handlePointerLeave = (e: React.PointerEvent<HTMLDivElement>) => {
+    e.currentTarget.style.removeProperty("--tilt-x");
+    e.currentTarget.style.removeProperty("--tilt-y");
+    e.currentTarget.style.removeProperty("--tilt-lift");
+  };
+
+    const gradient = accentGradient || getCardGradient(id || title);
 
   if (isLoading) {
     return <SkillCardSkeleton className={className} />;
@@ -124,6 +142,8 @@ export const SkillCard: React.FC<SkillCardProps> = ({
     <div
       id={id}
       className={`${styles.card} ${className}`}
+      onPointerMove={handlePointerMove}
+      onPointerLeave={handlePointerLeave}
       onClick={onClick}
       role="article"
       tabIndex={0}

@@ -1,3 +1,5 @@
+/* MySkillsWorkspace.module.css — Unified Skillhouse Architecture */
+
 .workspaceContainer {
   min-height: 100vh;
   display: flex;
@@ -95,6 +97,7 @@
   cursor: pointer;
   border-radius: 0px;
   white-space: nowrap;
+  transition: background-color 0.15s ease, transform 0.1s ease;
 }
 
 .secondaryBtn:hover {
@@ -128,6 +131,7 @@
   cursor: pointer;
   border-radius: 0px;
   white-space: nowrap;
+  transition: background-color 0.15s ease, transform 0.1s ease;
 }
 
 .primaryBtn:hover {
@@ -177,13 +181,21 @@
   font-size: 12px;
 }
 
-/* Tab Bar */
+/* Toolbar Row: Tabs + Search Input */
+.toolbarRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  border-bottom: 1px solid #CDB7AE;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
 .tabBar {
   display: flex;
   align-items: center;
   gap: 8px;
-  border-bottom: 1px solid #CDB7AE;
-  margin-bottom: 28px;
 }
 
 .tabBtn {
@@ -229,9 +241,114 @@
   color: #FFFFFF;
 }
 
+.searchBox {
+  display: flex;
+  align-items: center;
+  position: relative;
+  min-width: 260px;
+  max-width: 380px;
+  width: 100%;
+  margin-bottom: 8px;
+}
+
+.searchIcon {
+  position: absolute;
+  left: 12px;
+  color: #79716B;
+  pointer-events: none;
+}
+
+.searchInput {
+  width: 100%;
+  padding: 8px 36px 8px 34px;
+  background-color: #FFECD8;
+  border: 1px solid #CDB7AE;
+  border-radius: 0px;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  color: #000000;
+  outline: none;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.searchInput:focus {
+  border-color: #FB6320;
+  background-color: #FFFDF8;
+}
+
+.clearSearchBtn {
+  position: absolute;
+  right: 10px;
+  background: none;
+  border: none;
+  color: #79716B;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+}
+
+.clearSearchBtn:hover {
+  color: #000000;
+}
+
+/* Category Filter Chips */
+.categoryFiltersRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+
+.filterLeadIcon {
+  color: #79716B;
+  flex-shrink: 0;
+}
+
+.pillsScroll {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  overflow-x: auto;
+}
+
+.categoryFilterPill {
+  padding: 5px 12px;
+  background-color: #FFECD8;
+  border: 1px solid #CDB7AE;
+  border-radius: 0px;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 500;
+  color: #464646;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s ease;
+}
+
+.categoryFilterPill:hover {
+  background-color: #FFFDF8;
+  color: #000000;
+}
+
+.categoryFilterPillActive {
+  background-color: #FB6320;
+  border-color: #FB6320;
+  color: #FFFFFF;
+  font-weight: 600;
+}
+
+.categoryFilterPillActive:hover {
+  background-color: #E05215;
+  color: #FFFFFF;
+}
+
 /* Content Section & Grid */
 .contentSection {
-  min-height: 380px;
+  min-height: 420px;
 }
 
 .skillsGrid {
@@ -240,9 +357,12 @@
   gap: 24px;
 }
 
-/* Empty State */
+/* ==========================================================================
+   Figma Node 4687:201493 — Empty State
+   ========================================================================== */
+
 .emptyContainer {
-  padding: 72px 24px;
+  padding: 72px 24px 64px;
   background-color: #FFECD8;
   border: 1px solid #CDB7AE;
   border-radius: 0px;
@@ -254,8 +374,8 @@
 }
 
 .emptyIconBox {
-  width: 64px;
-  height: 64px;
+  width: 72px;
+  height: 72px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -267,7 +387,7 @@
 
 .emptyTitle {
   font-family: var(--font-sans);
-  font-size: 20px;
+  font-size: 24px;
   font-weight: 700;
   color: #000000;
   margin: 0;
@@ -275,15 +395,23 @@
 
 .emptyDescription {
   font-family: var(--font-sans);
-  font-size: 14px;
+  font-size: 15px;
   color: #625E59;
-  max-width: 440px;
+  max-width: 480px;
   margin: 0;
-  line-height: 1.5;
+  line-height: 1.6;
+}
+
+.emptyActionsRow {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 .exploreMarketplaceBtn {
-  margin-top: 16px;
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -297,6 +425,7 @@
   cursor: pointer;
   border-radius: 0px;
   white-space: nowrap;
+  transition: background-color 0.15s ease, transform 0.1s ease;
 }
 
 .exploreMarketplaceBtn:hover {
@@ -305,6 +434,137 @@
 
 .exploreMarketplaceBtn:active {
   transform: scale(0.96);
+}
+
+.emptyRequestBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  background-color: #FFEEDD;
+  color: #000000;
+  border: 1px solid #CDB7AE;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: 0px;
+  white-space: nowrap;
+  transition: background-color 0.15s ease, transform 0.1s ease;
+}
+
+.emptyRequestBtn:hover {
+  background-color: #FFFDF8;
+}
+
+.emptyRequestBtn:active {
+  transform: scale(0.96);
+}
+
+/* Empty State Feature Cards */
+.emptyHighlightsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  max-width: 820px;
+  width: 100%;
+  margin-top: 48px;
+}
+
+.highlightCard {
+  background-color: #FFEEDD;
+  border: 1px solid #CDB7AE;
+  padding: 20px 18px;
+  border-radius: 0px;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.highlightIcon {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #FFECD8;
+  border: 1px solid #CDB7AE;
+  color: #FB6320;
+  margin-bottom: 4px;
+}
+
+.highlightCard h3 {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 700;
+  color: #000000;
+  margin: 0;
+}
+
+.highlightCard p {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  color: #625E59;
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* No Search Results */
+.noSearchResults {
+  padding: 64px 24px;
+  background-color: #FFECD8;
+  border: 1px solid #CDB7AE;
+  border-radius: 0px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 12px;
+}
+
+.noSearchIcon {
+  color: #79716B;
+}
+
+.noSearchResults h3 {
+  font-family: var(--font-sans);
+  font-size: 18px;
+  font-weight: 700;
+  color: #000000;
+  margin: 0;
+}
+
+.noSearchResults p {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  color: #625E59;
+  margin: 0;
+}
+
+.resetFiltersBtn {
+  margin-top: 8px;
+  padding: 8px 16px;
+  background-color: #FFEEDD;
+  border: 1px solid #CDB7AE;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 600;
+  color: #FB6320;
+  cursor: pointer;
+  border-radius: 0px;
+}
+
+.resetFiltersBtn:hover {
+  background-color: #FFFDF8;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .emptyHighlightsGrid {
+    grid-template-columns: 1fr;
+    max-width: 440px;
+  }
 }
 
 @media (max-width: 768px) {
@@ -324,5 +584,12 @@
   .agentStatusBar {
     flex-direction: column;
     align-items: flex-start;
+  }
+  .toolbarRow {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .searchBox {
+    max-width: 100%;
   }
 }

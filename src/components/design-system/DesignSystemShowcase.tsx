@@ -1,3 +1,4 @@
+import { MySkillsWorkspace } from "../features/MySkillsWorkspace/MySkillsWorkspace";
 "use client";
 
 import React, { useState } from "react";
@@ -45,6 +46,10 @@ export const DesignSystemShowcase: React.FC = () => {
   const [demoNavSignedIn, setDemoNavSignedIn] = useState(false);
   const [demoUserMenuVariant, setDemoUserMenuVariant] = useState<"attending" | "extended">("attending");
   const [demoUserMenuActiveItem, setDemoUserMenuActiveItem] = useState<string>("bookmarks");
+    const [demoWorkspaceSavedIds, setDemoWorkspaceSavedIds] = useState<string[]>([
+    "visual-canvas-deck",
+    "pixel-promo-video",
+  ]);
   const [demoUserMenuFeedback, setDemoUserMenuFeedback] = useState<string | null>(null);
   const [cbAllSkills, setCbAllSkills] = useState(true);
   const [filterActive, setFilterActive] = useState<Record<string, boolean>>({
@@ -1365,6 +1370,103 @@ export const DesignSystemShowcase: React.FC = () => {
           <span style={{ color: "var(--color-brand)", fontFamily: "var(--font-pixel)", fontSize: "12px" }}>1600px ALIGNED</span>
         </div>
       </section>
+
+      {/* 19. My Skills Workspace Architecture & States (Nodes 4687:201493, 4687:203867, 4687:205241 & Sinedogma 3D Tilt Mechanics) */}
+      <section className={styles.section} id="section-19" data-testid="ds-section-my-skills-workspace">
+        <div className={styles.sectionHeader}>
+          <div className={styles.sectionMeta}>
+            <span className={styles.sectionNumber}>19</span>
+            <span className={styles.nodeBadge}>Figma Nodes 4687:201493, 4687:203867, 4687:205241</span>
+          </div>
+          <h2 className={styles.sectionTitle}>My Skills Workspace — Empty &amp; Filled States</h2>
+          <p className={styles.sectionDesc}>
+            Comprehensive agent workspace logic displayed when a user clicks &quot;My Skills&quot; from the navigation dropdown. Incorporates the exact <strong>sinedogma.com.tr</strong> 3D perspective hover tilt mechanics (<code>perspective(900px) rotateX(--tilt-x) rotateY(--tilt-y)</code>), responsive category filter chips, search filtering, and the interactive detail drawer.
+          </p>
+        </div>
+
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "16px", marginBottom: "24px" }}>
+          <div style={{ padding: "16px", background: "var(--color-surface-peach)", border: "1px solid var(--color-border-subtle)" }}>
+            <h4 style={{ margin: "0 0 8px 0", fontSize: "14px", fontFamily: "var(--font-pixel)", color: "var(--color-brand)" }}>
+              Empty State (Node 4687:201493)
+            </h4>
+            <p style={{ margin: 0, fontSize: "13px", color: "var(--color-text-secondary)", lineHeight: 1.5 }}>
+              Displays when 0 skills are saved. Features the Lucide <code>ReceiptText</code> peach container, motivating copy, Explore Marketplace CTA, and 3 workflow cards.
+            </p>
+          </div>
+          <div style={{ padding: "16px", background: "var(--color-surface-cream)", border: "1px solid var(--color-border-subtle)" }}>
+            <h4 style={{ margin: "0 0 8px 0", fontSize: "14px", fontFamily: "var(--font-pixel)", color: "var(--color-brand)" }}>
+              Filled State (Node 4687:203867)
+            </h4>
+            <p style={{ margin: 0, fontSize: "13px", color: "var(--color-text-secondary)", lineHeight: 1.5 }}>
+              Displays user&apos;s saved tools with real-time text filter, category chips, active agent sync badge, and 1-click bookmark removal.
+            </p>
+          </div>
+          <div style={{ padding: "16px", background: "var(--color-surface-peach)", border: "1px solid var(--color-border-subtle)" }}>
+            <h4 style={{ margin: "0 0 8px 0", fontSize: "14px", fontFamily: "var(--font-pixel)", color: "var(--color-brand)" }}>
+              Sinedogma Tilt &amp; Drawer (Node 4687:205241)
+            </h4>
+            <p style={{ margin: 0, fontSize: "13px", color: "var(--color-text-secondary)", lineHeight: 1.5 }}>
+              Dynamic pointer tracking calculates <code>--tilt-x</code> and <code>--tilt-y</code> angles. Clicking any card slides open the full capability drawer.
+            </p>
+          </div>
+        </div>
+
+        <div style={{ padding: "20px", background: "#FFEEDD", border: "1px solid #CDB7AE" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px", flexWrap: "wrap", gap: "12px" }}>
+            <span style={{ fontWeight: 600, fontSize: "14px" }}>
+              Interactive Preview: Toggle between Empty and Filled States
+            </span>
+            <div style={{ display: "flex", gap: "8px" }}>
+              <button
+                type="button"
+                className={styles.tokenButton}
+                onClick={() => setDemoWorkspaceSavedIds([])}
+                style={{
+                  background: demoWorkspaceSavedIds.length === 0 ? "var(--color-brand)" : "#FFEEDD",
+                  color: demoWorkspaceSavedIds.length === 0 ? "#FFFFFF" : "#000000",
+                  borderColor: demoWorkspaceSavedIds.length === 0 ? "var(--color-brand)" : "#CDB7AE"
+                }}
+              >
+                Simulate Empty State (0 skills)
+              </button>
+              <button
+                type="button"
+                className={styles.tokenButton}
+                onClick={() => setDemoWorkspaceSavedIds(["visual-canvas-deck", "pixel-promo-video", "algorithmic-music-composition"])}
+                style={{
+                  background: demoWorkspaceSavedIds.length > 0 ? "var(--color-brand)" : "#FFEEDD",
+                  color: demoWorkspaceSavedIds.length > 0 ? "#FFFFFF" : "#000000",
+                  borderColor: demoWorkspaceSavedIds.length > 0 ? "var(--color-brand)" : "#CDB7AE"
+                }}
+              >
+                Simulate Filled State (3 skills)
+              </button>
+            </div>
+          </div>
+
+          <div style={{ border: "1px solid #CDB7AE", background: "#FFEEDD" }}>
+            <MySkillsWorkspace
+              savedSkillIds={demoWorkspaceSavedIds}
+              installedSkillIds={["pixel-promo-video"]}
+              onToggleBookmark={(id: string) => {
+                setDemoWorkspaceSavedIds((prev) =>
+                  prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]
+                );
+              }}
+              onToggleInstall={(id: string) => {
+                setDemoUserMenuFeedback(`Toggled installation for ${id}`);
+              }}
+              onNavigateHome={() => setDemoUserMenuFeedback("Navigating to Home...")}
+              onNavigateMarketplace={() => setDemoUserMenuFeedback("Navigating to Marketplace...")}
+              onOpenCommandPalette={() => setDemoUserMenuFeedback("Opened Command Palette (⌘K)")}
+              onRequestSkill={() => setDemoUserMenuFeedback("Opened Request a Skill Modal")}
+              isSignedIn={true}
+              user={{ name: "Alex Vance", email: "alex@skillhouse.ai" }}
+            />
+          </div>
+        </div>
+      </section>
+
     </div>
   );
 };

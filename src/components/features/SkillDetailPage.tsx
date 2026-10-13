@@ -213,14 +213,7 @@ const SkillDetailPageInner: React.FC<SkillDetailPageProps> = ({
     : [skill.previewImage];
 
   const activeImage = thumbnails[activeThumbnailIndex] || skill.previewImage;
-  const defaultStepMeta = [
-    { step: "01", title: "Brief Input", tagline: "Specification & Prompt" },
-    { step: "02", title: "Synthesis", tagline: "Agent Composition" },
-    { step: "03", title: "Artifact Output", tagline: "Production Delivery" },
-  ];
 
-  const stepsList = (WORKFLOW_METADATA_BY_SKILL[skill.id] || defaultStepMeta).slice(0, Math.max(thumbnails.length, 3));
-  const activeStepMeta = stepsList[activeThumbnailIndex] || stepsList[0];
 
   const visibleSimilarSkills = SIMILAR_SKILLS.slice(similarSkillsOffset, similarSkillsOffset + 4);
 
@@ -349,82 +342,102 @@ const SkillDetailPageInner: React.FC<SkillDetailPageProps> = ({
       <main className={styles.mainContent}>
         {/* Two-Column Main Layout (Balanced Proportions) */}
         <section className={styles.twoColumnLayout}>
-          {/* Left Column: Sticky Media Preview Gallery */}
+          {/* Left Column: Sticky Media Preview Gallery (Editorial Showcase) */}
           <div className={styles.galleryColumn}>
-            <div
-              className={styles.mainPreviewCanvas}
-              data-testid="skill-detail-main-preview"
-            >
-              {/* Contextual Workflow Step Live Indicator (Approach 3) */}
-              <div className={styles.canvasStepBadge} aria-live="polite">
-                <span className={styles.canvasStepPulse} aria-hidden="true" />
-                <span className={styles.canvasStepCounter}>
-                  STEP {activeStepMeta.step} OF {String(stepsList.length).padStart(2, "0")}
-                </span>
-                <span className={styles.canvasStepDivider} aria-hidden="true">•</span>
-                <span className={styles.canvasStepLabel}>{activeStepMeta.title}</span>
+            <div className={styles.editorialFrameContainer}>
+              {/* Bisecting Circular Navigation Left Arrow */}
+              {thumbnails.length > 1 && (
+                <button
+                  type="button"
+                  className={`${styles.bisectingArrow} ${styles.bisectingArrowLeft}`}
+                  onClick={() =>
+                    setActiveThumbnailIndex((prev) =>
+                      prev === 0 ? thumbnails.length - 1 : prev - 1
+                    )
+                  }
+                  aria-label="Previous preview slide"
+                  title="Previous slide"
+                  data-testid="editorial-prev-slide-btn"
+                >
+                  <ChevronLeft size={20} aria-hidden="true" />
+                </button>
+              )}
+
+              {/* Bisecting Circular Navigation Right Arrow */}
+              {thumbnails.length > 1 && (
+                <button
+                  type="button"
+                  className={`${styles.bisectingArrow} ${styles.bisectingArrowRight}`}
+                  onClick={() =>
+                    setActiveThumbnailIndex((prev) =>
+                      (prev + 1) % thumbnails.length
+                    )
+                  }
+                  aria-label="Next preview slide"
+                  title="Next slide"
+                  data-testid="editorial-next-slide-btn"
+                >
+                  <ChevronRight size={20} aria-hidden="true" />
+                </button>
+              )}
+
+              {/* Main Preview Canvas Frame with Inner Breathing Room */}
+              <div
+                className={styles.mainPreviewCanvas}
+                data-testid="skill-detail-main-preview"
+              >
+                <Image
+                  src={activeImage}
+                  alt={`${skill.title} preview canvas`}
+                  fill
+                  sizes="(max-width: 992px) 100vw, 55vw"
+                  className={styles.mainPreviewImage}
+                  priority
+                  unoptimized
+                />
               </div>
 
-              <Image
-                src={activeImage}
-                alt={`${skill.title} preview canvas`}
-                fill
-                sizes="(max-width: 992px) 100vw, 55vw"
-                className={styles.mainPreviewImage}
-                priority
-                unoptimized
-              />
+              {/* Boxed Index Badge in Lower Right (Reference Style [ 01/03 ]) */}
+              <div
+                className={styles.boxedIndexBadge}
+                aria-label={`Slide ${activeThumbnailIndex + 1} of ${thumbnails.length}`}
+              >
+                <span>{String(activeThumbnailIndex + 1).padStart(2, "0")}</span>
+                <span className={styles.boxedIndexAccent}>
+                  /{String(thumbnails.length).padStart(2, "0")}
+                </span>
+              </div>
             </div>
 
-            {/* Approach 3: Contextual Workflow Step Strip (Agent Lifecycle Pipeline) */}
-            <div className={styles.workflowStrip} role="region" aria-label="Skill workflow milestones">
-              <div className={styles.workflowHeader}>
-                <div className={styles.workflowHeading}>
-                  <span className={styles.workflowPulseDot} aria-hidden="true" />
-                  <span>Agent Output Pipeline</span>
-                </div>
-                <span className={styles.workflowHelper}>
-                  Phase {activeStepMeta.step} of {String(stepsList.length).padStart(2, "0")}
-                </span>
-              </div>
-
-              <div className={styles.stepsTrack} role="tablist" aria-label="Workflow lifecycle steps">
-                {stepsList.map((stepItem, idx) => {
-                  const thumbSrc = thumbnails[idx] || thumbnails[0];
-                  const isActive = activeThumbnailIndex === idx;
-
-                  return (
-                    <button
-                      key={`step-${stepItem.step}-${idx}`}
-                      type="button"
-                      role="tab"
-                      aria-selected={isActive}
-                      aria-label={`Step ${stepItem.step}: ${stepItem.title} - ${stepItem.tagline}`}
-                      className={`${styles.stepCard} ${isActive ? styles.active : ""}`}
-                      onClick={() => setActiveThumbnailIndex(idx)}
-                      data-testid={`thumbnail-tab-${idx}`}
-                    >
-                      <div className={styles.stepMetaRow}>
-                        <span className={styles.stepNumBadge}>{stepItem.step}</span>
-                        <span className={styles.stepTitle}>{stepItem.title}</span>
-                      </div>
-
-                      <div className={styles.stepThumbFrame}>
-                        <Image
-                          src={thumbSrc}
-                          alt={stepItem.title}
-                          fill
-                          sizes="150px"
-                          className={styles.stepThumbImg}
-                          unoptimized
-                        />
-                      </div>
-
-                      <span className={styles.stepTagline}>{stepItem.tagline}</span>
-                    </button>
-                  );
-                })}
-              </div>
+            {/* Thumbnail Selectors Row */}
+            <div
+              className={styles.thumbnailsRow}
+              role="tablist"
+              aria-label="Preview gallery thumbnails"
+            >
+              {thumbnails.map((thumbSrc, idx) => (
+                <button
+                  key={`${thumbSrc}-${idx}`}
+                  type="button"
+                  role="tab"
+                  aria-selected={activeThumbnailIndex === idx}
+                  aria-label={`View preview slide ${idx + 1}`}
+                  className={`${styles.thumbnailCard} ${
+                    activeThumbnailIndex === idx ? styles.active : ""
+                  }`}
+                  onClick={() => setActiveThumbnailIndex(idx)}
+                  data-testid={`thumbnail-tab-${idx}`}
+                >
+                  <Image
+                    src={thumbSrc}
+                    alt={`Thumbnail ${idx + 1}`}
+                    width={104}
+                    height={72}
+                    className={styles.thumbnailImage}
+                    unoptimized
+                  />
+                </button>
+              ))}
             </div>
           </div>
 
@@ -442,52 +455,67 @@ const SkillDetailPageInner: React.FC<SkillDetailPageProps> = ({
           </div>
         </section>
 
-        {/* 3. Similar Skills Section (Full Container Width) */}
-        <section className={styles.similarSection} aria-labelledby="similar-skills-heading">
+        {/* 3. Similar Skills Section (Editorial Carousel with Bisecting Border Arrows) */}
+        <section
+          className={styles.similarSection}
+          aria-labelledby="similar-skills-heading"
+        >
           <div className={styles.similarHeaderRow}>
             <h2 id="similar-skills-heading" className={styles.similarTitle}>
               Similar Skills
             </h2>
-            <div className={styles.carouselControls}>
-              <button
-                type="button"
-                className={styles.carouselBtn}
-                onClick={handlePrevSimilar}
-                disabled={similarSkillsOffset === 0}
-                aria-label="Previous similar skills"
-              >
-                <ChevronLeft size={16} />
-              </button>
-              <button
-                type="button"
-                className={styles.carouselBtn}
-                onClick={handleNextSimilar}
-                disabled={similarSkillsOffset >= SIMILAR_SKILLS.length - 4}
-                aria-label="Next similar skills"
-              >
-                <ChevronRight size={16} />
-              </button>
+            <div className={styles.similarCounterBadge}>
+              <span>{String(similarSkillsOffset + 1).padStart(2, "0")}</span>
+              <span className={styles.similarCounterAccent}>
+                /{String(Math.max(1, SIMILAR_SKILLS.length - 3)).padStart(2, "0")}
+              </span>
             </div>
           </div>
 
-          <div
-            className={styles.similarGrid}
-            data-testid="similar-skills-grid"
-          >
-            {visibleSimilarSkills.map((simSkill) => (
-              <SkillCard
-                key={simSkill.id}
-                id={simSkill.id}
-                title={simSkill.title}
-                category={simSkill.category}
-                previewImage={simSkill.previewImage}
-                isBookmarked={simSkill.isBookmarked}
-                onClick={() => {
-                  if (onNavigateSkill) onNavigateSkill(simSkill.id);
-                  else router.push(`/skills/${simSkill.id}`);
-                }}
-              />
-            ))}
+          <div className={styles.similarCarouselContainer}>
+            {/* Bisecting Circular Navigation Left Arrow on Container Border */}
+            <button
+              type="button"
+              className={`${styles.similarBisectingArrow} ${styles.similarBisectingArrowLeft}`}
+              onClick={handlePrevSimilar}
+              disabled={similarSkillsOffset === 0}
+              aria-label="Previous similar skills"
+              data-testid="similar-prev-btn"
+            >
+              <ChevronLeft size={22} aria-hidden="true" />
+            </button>
+
+            {/* Bisecting Circular Navigation Right Arrow on Container Border */}
+            <button
+              type="button"
+              className={`${styles.similarBisectingArrow} ${styles.similarBisectingArrowRight}`}
+              onClick={handleNextSimilar}
+              disabled={similarSkillsOffset >= SIMILAR_SKILLS.length - 4}
+              aria-label="Next similar skills"
+              data-testid="similar-next-btn"
+            >
+              <ChevronRight size={22} aria-hidden="true" />
+            </button>
+
+            <div
+              className={styles.similarGrid}
+              data-testid="similar-skills-grid"
+            >
+              {visibleSimilarSkills.map((simSkill) => (
+                <SkillCard
+                  key={simSkill.id}
+                  id={simSkill.id}
+                  title={simSkill.title}
+                  category={simSkill.category}
+                  previewImage={simSkill.previewImage}
+                  isBookmarked={simSkill.isBookmarked}
+                  onClick={() => {
+                    if (onNavigateSkill) onNavigateSkill(simSkill.id);
+                    else router.push(`/skills/${simSkill.id}`);
+                  }}
+                />
+              ))}
+            </div>
           </div>
         </section>
       </main>

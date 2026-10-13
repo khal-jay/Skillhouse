@@ -280,4 +280,40 @@ describe("SkillDetailPage Component (Figma Node 751:5602)", () => {
     );
     expect(screen.getByTestId("skill-detail-page")).toBeInTheDocument();
   });
+  it("handles gallery slides, thumbnails, and similar carousel controls", () => {
+    const handleBack = vi.fn();
+    const handleNavigateSkill = vi.fn();
+    render(
+      <SkillDetailPage onBack={handleBack} onNavigateSkill={handleNavigateSkill} />
+    );
+
+    // 1. Gallery slide navigation
+    const nextSlideBtn = screen.getByTestId("editorial-next-slide-btn");
+    const prevSlideBtn = screen.getByTestId("editorial-prev-slide-btn");
+    fireEvent.click(nextSlideBtn);
+    fireEvent.click(prevSlideBtn);
+    fireEvent.click(prevSlideBtn);
+
+    // 2. Thumbnail tab selection
+    const thumbTab = screen.getByTestId("thumbnail-tab-1");
+    fireEvent.click(thumbTab);
+
+    // 3. Similar carousel navigation
+    const similarNextBtn = screen.getByTestId("similar-next-btn");
+    const similarPrevBtn = screen.getByTestId("similar-prev-btn");
+    fireEvent.click(similarNextBtn);
+    fireEvent.click(similarPrevBtn);
+
+    // 4. Back button
+    const backBtn = screen.getByLabelText("Back to skills marketplace");
+    fireEvent.click(backBtn);
+    expect(handleBack).toHaveBeenCalledTimes(1);
+
+    // 5. Similar skill card click
+    const similarCards = screen.getAllByRole("article");
+    if (similarCards.length > 0) {
+      fireEvent.click(similarCards[0]);
+      expect(handleNavigateSkill).toHaveBeenCalled();
+    }
+  });
 });

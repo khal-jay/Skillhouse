@@ -3,13 +3,13 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import { describe, it, expect, vi } from "vitest";
 import { SkillCard } from "./SkillCard";
 
-describe("Features SkillCard Component", () => {
-  const defaultProps = {
+const defaultProps = {
     title: "Pixel Promo Video",
     category: "Design",
     previewImage: "/figma/skill-card-preview.png",
   };
 
+describe("Features SkillCard Component", () => {
   it("renders title, category, and image alt text", () => {
     render(<SkillCard {...defaultProps} />);
     expect(screen.getByText("Pixel Promo Video")).toBeInTheDocument();
@@ -127,5 +127,26 @@ describe("Features SkillCard Component", () => {
     rerender(<SkillCard {...defaultProps} accentGradient="linear-gradient(#111, #222)" />);
     expect(screen.getByTestId("skill-card-gradient")).toBeInTheDocument();
   });
-});
+  it("handles pointer leave and keyboard accessibility", () => {
+    const handleClick = vi.fn();
+    render(<SkillCard {...defaultProps} onClick={handleClick} />);
+    const card = screen.getByRole("article");
 
+    fireEvent.pointerLeave(card);
+    fireEvent.keyDown(card, { key: "Enter" });
+    expect(handleClick).toHaveBeenCalledTimes(1);
+
+    fireEvent.keyDown(card, { key: " " });
+    expect(handleClick).toHaveBeenCalledTimes(2);
+
+    fireEvent.keyDown(card, { key: "Tab" });
+    expect(handleClick).toHaveBeenCalledTimes(2);
+  });
+
+  it("handles image error state", () => {
+    render(<SkillCard {...defaultProps} />);
+    const img = screen.getByRole("img");
+    fireEvent.error(img);
+    expect(img).not.toBeInTheDocument();
+  });
+});

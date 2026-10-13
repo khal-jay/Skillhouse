@@ -6,14 +6,23 @@
   user-select: none;
   background: var(--color-surface-card);
   border-radius: 0px;
-  transition: transform var(--transition-fast);
+  /* Sinedogma 3D perspective mouse hover tilt mechanics */
+  transform: perspective(900px) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg)) translateY(var(--tilt-lift, 0px));
+  transition: transform 0.15s ease-out, box-shadow 0.2s ease-out;
   position: relative;
   width: 100%;
   box-sizing: border-box;
 }
 
 .card:hover {
-  transform: translateY(-2px);
+  box-shadow: 0 12px 26px rgba(0, 0, 0, 0.08);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card {
+    transform: none !important;
+    transition: none !important;
+  }
 }
 
 @media (hover: hover) and (pointer: fine) {
