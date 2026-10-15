@@ -37,6 +37,7 @@ export interface NavBarProps {
   isSignedIn?: boolean;
   onSignOut?: () => void;
   savedSkillsCount?: number;
+  searchInputTestId?: string;
   user?: {
     name: string;
     email?: string;
@@ -65,6 +66,7 @@ export const NavBar: React.FC<NavBarProps> = ({
   isSignedIn: propIsSignedIn,
   onSignOut,
   user: propUser,
+  searchInputTestId,
   responsiveMode,
   className = "",
 }) => {
@@ -257,10 +259,11 @@ export const NavBar: React.FC<NavBarProps> = ({
                 }
               }}
               placeholder="Search skills / outputs"
+              data-testid={searchInputTestId || (currentView === "my-skills" ? "workspace-filter-input" : undefined)}
             />
           </div>
 
-          {onViewChange && (
+          {onViewChange && (currentView === "marketplace" || currentView === "design-system") && (
             <button
               type="button"
               className={`${styles.docBadge} ${currentView === "design-system" ? styles.active : ""}`}

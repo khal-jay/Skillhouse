@@ -1,180 +1,703 @@
-/* SkillDocViewer Component Styles */
+/* SkillDocViewer Component Styles
+ * Pixel-perfect implementation of Figma Node 897:9533
+ * Includes Horizontal Tabs Bar (#897:9536), Detail Box (#897:9547), and Accessible Micro-Terminal Lightbox
+ */
+
 .container {
   width: 100%;
-  background: #ffffff;
-  border: 1px solid rgba(0, 0, 0, 0.12);
-  border-radius: 4px;
-  overflow: hidden;
-  box-sizing: border-box;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
 }
 
+/* 1. Horizontal Tabs Header Bar (Figma Node #897:9536) */
 .tabList {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 0;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-  background-color: #faf7f2;
-  padding: 0 16px;
-  overflow-x: auto;
+  height: 40px;
+  background-color: #FFEEDD;
+  border: 1px solid rgba(166, 166, 166, 0.5);
+  border-bottom: none;
+  box-sizing: border-box;
+  width: fit-content;
 }
 
 .tabButton {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
-  padding: 14px 20px;
+  height: 100%;
+  padding: 6px 14px;
   background: transparent;
   border: none;
-  border-bottom: 2px solid transparent;
-  font-family: inherit;
-  font-size: 13px;
+  border-left: 1px solid rgba(166, 166, 166, 0.5);
+  font-family: var(--font-sans);
+  font-size: 12px;
   font-weight: 500;
-  color: #666666;
+  line-height: 1.45em;
+  color: #000000;
   cursor: pointer;
-  transition: all 0.15s ease;
-  white-space: nowrap;
-  user-select: none;
+  box-sizing: border-box;
+  transition:
+    background-color var(--transition-fast, 150ms ease),
+    color var(--transition-fast, 150ms ease),
+    transform var(--transition-fast, 150ms ease);
 }
 
-.tabButton:hover {
-  color: #111111;
-  background-color: rgba(0, 0, 0, 0.02);
+.tabButton:first-child {
+  border-left: none;
 }
 
+.tabButton:hover:not(.active) {
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+.tabButton:active {
+  transform: scale(0.96);
+}
+
+/* Active tab: Sleek solid black badge with white text (#897:9537) */
 .tabButton.active {
-  color: var(--color-brand, #FB6320);
-  border-bottom-color: var(--color-brand, #FB6320);
-  font-weight: 600;
-  background: #ffffff;
+  background-color: #000000;
+  color: #FFFFFF;
+  border: 1px solid #CFD9E8;
+  font-weight: 500;
 }
 
 .tabButton:focus-visible {
-  outline: 2px solid var(--color-brand, #FB6320);
+  outline: 2px solid #000000;
   outline-offset: -2px;
 }
 
+/* 2. Main Tab Content Panel (Figma Node #897:9547) */
 .tabPanel {
-  padding: 28px 32px;
+  border: 1px solid rgba(166, 166, 166, 0.5);
+  padding: 20px;
+  background-color: transparent;
   box-sizing: border-box;
-  background: #ffffff;
-}
-
-/* Overview Tab Styles */
-.overviewGrid {
   display: flex;
   flex-direction: column;
-  gap: 28px;
+  gap: 20px;
+}
+
+/* Overview Section Layout */
+.sectionGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
 }
 
 .sectionHeading {
+  font-family: var(--font-pixel, monospace);
   font-size: 14px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: #111111;
-  margin: 0 0 12px 0;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.overviewText {
-  font-size: 14px;
-  line-height: 1.6;
-  color: #444444;
+  font-weight: 400;
+  line-height: 1.2em;
+  color: #464646;
   margin: 0;
 }
 
-.capabilitiesGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+.overviewText {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.45em;
+  color: #7F776E;
+  margin: 0;
+  max-width: 95ch;
+}
+
+/* 1px Divider (#897:9581 / #897:9682) */
+.divider {
+  width: 100%;
+  height: 1px;
+  background-color: rgba(166, 166, 166, 0.5);
+  opacity: 0.3;
+  border: none;
+  margin: 0;
+}
+
+/* Skill Examples Grid (#897:9669) */
+.examplesGrid {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  gap: 16px;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.exampleCard {
+  flex: 1 1 0px;
+  min-width: 0;
+  max-width: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  box-sizing: border-box;
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  text-align: left;
+  transition: transform var(--transition-fast, 150ms ease);
+}
+
+.exampleCard:hover {
+  transform: translateY(-2px);
+}
+
+.exampleCard:active {
+  transform: scale(0.96);
+}
+
+.exampleCard:focus-visible {
+  outline: 2px solid #000000;
+  outline-offset: 4px;
+}
+
+.exampleImageWrapper {
+  width: 100%;
+  height: 80px;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(166, 166, 166, 0.3);
+  background-color: #1A1918;
+}
+
+.exampleImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform var(--transition-fast, 200ms ease);
+}
+
+.exampleCard:hover .exampleImage {
+  transform: scale(1.04);
+}
+
+.exampleHoverBadge {
+  position: absolute;
+  bottom: 6px;
+  right: 6px;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(4px);
+  color: #FFFFFF;
+  font-family: var(--font-sans);
+  font-size: 10px;
+  font-weight: 500;
+  padding: 2px 6px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 150ms ease, transform 150ms ease;
+  pointer-events: none;
+}
+
+.exampleCard:hover .exampleHoverBadge {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.exampleCaptionRow {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+}
+
+.exampleCaption {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 20px;
+  color: #000000;
+  margin: 0;
+}
+
+/* 3. Skill Example Lightbox Modal - Accessible & Retro-Tech Polish */
+.lightboxBackdrop {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(8px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  animation: fadeIn 150ms ease;
+}
+
+.lightboxModal {
+  position: relative;
+  background-color: #FFEEDD;
+  border: 1px solid rgba(166, 166, 166, 0.5);
+  border-radius: var(--radius-none, 0px);
+  width: 100%;
+  max-width: 860px;
+  max-height: 92vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0px 24px 48px rgba(0, 0, 0, 0.35);
+  animation: scaleUp 200ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.lightboxHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 20px;
+  border-bottom: 1px solid rgba(166, 166, 166, 0.5);
+  background-color: #FFEEDD;
+}
+
+.lightboxTitleGroup {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.lightboxTitle {
+  font-family: var(--font-pixel, monospace);
+  font-size: 14px;
+  font-weight: 400;
+  color: #000000;
+  margin: 0;
+  letter-spacing: 0.02em;
+}
+
+.lightboxCounter {
+  font-family: var(--font-mono, monospace);
+  font-size: 11px;
+  font-weight: 600;
+  color: #FB6320;
+  background: rgba(251, 99, 32, 0.08);
+  border: 1px solid rgba(251, 99, 32, 0.3);
+  padding: 2px 8px;
+  line-height: 1.4;
+  border-radius: var(--radius-none, 0px);
+  letter-spacing: 0.05em;
+}
+
+.lightboxCloseBtn {
+  background: transparent;
+  border: 1px solid transparent;
+  cursor: pointer;
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #000000;
+  border-radius: var(--radius-none, 0px);
+  transition:
+    background-color var(--transition-fast, 150ms ease),
+    border-color var(--transition-fast, 150ms ease),
+    transform var(--transition-fast, 150ms ease);
+}
+
+.lightboxCloseBtn:hover {
+  background-color: rgba(0, 0, 0, 0.08);
+  border-color: rgba(166, 166, 166, 0.5);
+}
+
+.lightboxCloseBtn:active {
+  transform: scale(0.96);
+}
+
+.lightboxCloseBtn:focus-visible {
+  outline: 2px solid #000000;
+  outline-offset: -2px;
+}
+
+.lightboxStage {
+  position: relative;
+  width: 100%;
+  height: 480px;
+  max-height: 55vh;
+  background-color: #0E0D0C;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.lightboxImage {
+  object-fit: contain;
+}
+
+.lightboxNavBtn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: #FFFFFF;
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition:
+    background-color var(--transition-fast, 150ms ease),
+    border-color var(--transition-fast, 150ms ease),
+    transform var(--transition-fast, 150ms ease);
+  z-index: 10;
+}
+
+.lightboxNavBtn:hover {
+  background-color: #FB6320;
+  border-color: #FB6320;
+}
+
+.lightboxNavBtn:active {
+  transform: translateY(-50%) scale(0.96);
+}
+
+.lightboxNavBtn:focus-visible {
+  outline: 2px solid #FB6320;
+  outline-offset: 2px;
+}
+
+.lightboxNavPrev {
+  left: 16px;
+}
+
+.lightboxNavNext {
+  right: 16px;
+}
+
+.lightboxFooter {
+  padding: 16px 20px;
+  background-color: #FFEEDD;
+  border-top: 1px solid rgba(166, 166, 166, 0.5);
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
   gap: 16px;
 }
 
-.capabilityCard {
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  border-radius: 4px;
-  padding: 16px;
-  background: #faf8f5;
+.lightboxPromptGroup {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
+  flex: 1;
+  min-width: 0;
+}
+
+.lightboxPromptMetaRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.lightboxPromptBadge {
+  font-family: var(--font-mono, monospace);
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #FB6320;
+  background: rgba(251, 99, 32, 0.1);
+  padding: 2px 6px;
+}
+
+.lightboxPromptDescription {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  line-height: 1.5;
+  color: #464646;
+  margin: 0;
+  text-transform: none; /* sentence-case, no all-caps */
+}
+
+/* Micro-terminal container */
+.terminalBox {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background-color: #1A1918;
+  border: 1px solid rgba(166, 166, 166, 0.4);
+  padding: 8px 12px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.terminalPromptSign {
+  color: #FB6320;
+  font-family: var(--font-mono, monospace);
+  font-size: 13px;
+  font-weight: 700;
+  user-select: none;
+  flex-shrink: 0;
+}
+
+.lightboxPromptText {
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-mono, monospace);
+  font-size: 12px;
+  line-height: 1.5;
+  color: #38EF7D;
+  white-space: pre;
+  overflow-x: auto;
+  text-overflow: clip; /* Fix: No truncation */
+  flex: 1;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.25) transparent;
+}
+
+.lightboxPromptText::-webkit-scrollbar {
+  height: 4px;
+}
+
+.lightboxPromptText::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.lightboxPromptText:focus-visible {
+  outline: 1px dashed #38EF7D;
+  outline-offset: 2px;
+}
+
+.lightboxActions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.lightboxCopyBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 38px;
+  padding: 0 16px;
+  background-color: #000000;
+  color: #FFFFFF;
+  border: 1px solid #000000;
+  border-radius: var(--radius-none, 0px);
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  transition:
+    background-color var(--transition-fast, 150ms ease),
+    border-color var(--transition-fast, 150ms ease),
+    transform var(--transition-fast, 150ms ease);
+}
+
+.lightboxCopyBtn:hover {
+  background-color: #54392D;
+  border-color: #54392D;
+}
+
+.lightboxCopyBtn:active {
+  transform: scale(0.96);
+}
+
+.lightboxCopyBtn:focus-visible {
+  outline: 2px solid #000000;
+  outline-offset: 2px;
+}
+
+.lightboxSelectBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 38px;
+  padding: 0 16px;
+  background-color: transparent;
+  color: #000000;
+  border: 1px solid #000000;
+  border-radius: var(--radius-none, 0px);
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  transition:
+    background-color var(--transition-fast, 150ms ease),
+    color var(--transition-fast, 150ms ease),
+    transform var(--transition-fast, 150ms ease);
+}
+
+.lightboxSelectBtn:hover {
+  background-color: #000000;
+  color: #FFFFFF;
+}
+
+.lightboxSelectBtn:active {
+  transform: scale(0.96);
+}
+
+.lightboxSelectBtn:focus-visible {
+  outline: 2px solid #000000;
+  outline-offset: 2px;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scaleUp {
+  from { opacity: 0; transform: scale(0.97); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* 4. Core Capabilities Grid (#897:9713) */
+.capabilitiesGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(216px, 1fr));
+  gap: 12px;
+  width: 100%;
+}
+
+.capabilityCard {
+  position: relative;
+  border: 1px solid #D3CAC1;
+  padding: 8px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  box-sizing: border-box;
+  background-color: transparent;
+  transition:
+    border-color var(--transition-fast, 150ms ease),
+    transform var(--transition-fast, 150ms ease);
+}
+
+.capabilityCard:hover {
+  border-color: #54392D;
+  transform: translateY(-1px);
+}
+
+/* Figma authentic #FB6320 corner brackets */
+.cornerBracket {
+  position: absolute;
+  width: 6.5px;
+  height: 5.5px;
+  pointer-events: none;
+}
+
+.cornerTl {
+  top: -1px;
+  left: -1px;
+}
+
+.cornerTr {
+  top: -1px;
+  right: -1px;
+}
+
+.cornerBl {
+  bottom: -1px;
+  left: -1px;
+}
+
+.cornerBr {
+  bottom: -1px;
+  right: -1px;
 }
 
 .capabilityTitle {
-  font-size: 13px;
-  font-weight: 600;
-  color: #111111;
-  display: flex;
-  align-items: center;
-  gap: 8px;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.45em;
+  color: #000000;
   margin: 0;
 }
 
 .capabilityDesc {
+  font-family: var(--font-sans);
   font-size: 12px;
-  line-height: 1.5;
-  color: #666666;
+  font-weight: 300;
+  line-height: 1.45em;
+  color: #7A7575;
   margin: 0;
 }
 
-.badgeRow {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.roleBadge {
-  display: inline-flex;
-  align-items: center;
-  padding: 4px 10px;
-  background: #eee8e0;
-  border: 1px solid rgba(0, 0, 0, 0.06);
-  border-radius: 2px;
-  font-size: 12px;
-  font-weight: 500;
-  color: #222222;
-}
-
-/* SKILL.md Tab Styles */
+/* 5. SKILL.md Prompt Tab Styles */
 .codeHeader {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 12px;
+  margin-bottom: 6px;
 }
 
 .codeMeta {
   display: flex;
   align-items: center;
-  gap: 12px;
-  font-size: 12px;
-  color: #666666;
+  gap: 10px;
+  font-family: var(--font-sans);
+  font-size: 12.5px;
+  color: #7F776E;
+}
+
+.codeMeta code {
+  font-family: var(--font-mono, monospace);
+  font-weight: 600;
+  color: #000000;
+  background-color: rgba(0, 0, 0, 0.05);
+  padding: 2px 6px;
 }
 
 .copyButton {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 6px 14px;
-  background: #111111;
-  color: #ffffff;
-  border: 1px solid #111111;
-  border-radius: 3px;
+  justify-content: center;
+  gap: 8px;
+  height: 32px;
+  padding: 0 14px;
+  background-color: #000000;
+  color: #FFFFFF;
+  border: 1px solid #000000;
+  font-family: var(--font-sans);
   font-size: 12px;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition:
+    background-color var(--transition-fast, 150ms ease),
+    border-color var(--transition-fast, 150ms ease),
+    transform var(--transition-fast, 150ms ease);
 }
 
 .copyButton:hover {
-  background: var(--color-brand, #FB6320);
-  border-color: var(--color-brand, #FB6320);
+  background-color: #54392D;
+  border-color: #54392D;
+}
+
+.copyButton:active {
+  transform: scale(0.96);
+}
+
+.copyButton:focus-visible {
+  outline: 2px solid #000000;
+  outline-offset: 2px;
 }
 
 .codeBlockWrapper {
-  background: #1e1e1e;
-  border-radius: 4px;
+  background-color: #1A1918;
+  border: 1px solid rgba(166, 166, 166, 0.5);
   padding: 20px;
   overflow-x: auto;
   box-sizing: border-box;
@@ -182,118 +705,90 @@
 
 .codeBlock {
   margin: 0;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-family: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace);
   font-size: 12.5px;
-  line-height: 1.6;
-  color: #e6e6e6;
+  line-height: 1.65;
+  color: #F0EDE9;
   white-space: pre-wrap;
   word-break: break-word;
 }
 
-/* Reviews & Changelog Tab Styles */
-.ratingHeader {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  padding-bottom: 20px;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
-  margin-bottom: 24px;
-}
-
-.ratingBig {
-  font-size: 32px;
-  font-weight: 700;
-  color: #111111;
-  line-height: 1;
-}
-
-.starsRow {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  color: #f59e0b;
-}
-
-.reviewCount {
-  font-size: 13px;
-  color: #666666;
-}
-
-.reviewsList {
+/* 6. Updates Tab Styles (Version History) */
+.changelogSection {
   display: flex;
   flex-direction: column;
   gap: 16px;
-  margin-bottom: 32px;
-}
-
-.reviewCard {
-  border: 1px solid rgba(0, 0, 0, 0.06);
-  border-radius: 4px;
-  padding: 16px 20px;
-  background: #faf8f5;
-}
-
-.reviewAuthorRow {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 8px;
-}
-
-.reviewAuthor {
-  font-size: 13px;
-  font-weight: 600;
-  color: #111111;
-}
-
-.reviewRole {
-  font-size: 12px;
-  color: #777777;
-  margin-left: 6px;
-}
-
-.reviewText {
-  font-size: 13px;
-  line-height: 1.5;
-  color: #333333;
-  margin: 0;
-}
-
-.changelogSection {
-  margin-top: 24px;
 }
 
 .changelogItem {
-  border-left: 2px solid var(--color-brand, #FB6320);
-  padding-left: 16px;
-  margin-bottom: 18px;
+  border-left: 2px solid #000000;
+  padding-left: 14px;
 }
 
 .changelogVersion {
-  font-size: 13px;
-  font-weight: 700;
-  color: #111111;
+  font-family: var(--font-pixel, var(--font-sans));
+  font-size: 13.5px;
+  font-weight: 500;
+  color: #000000;
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
 .changelogDate {
-  font-size: 11px;
+  font-family: var(--font-sans);
+  font-size: 12px;
   font-weight: 400;
-  color: #888888;
+  color: #7F776E;
 }
 
 .changelogNotes {
+  font-family: var(--font-sans);
   font-size: 12.5px;
   line-height: 1.5;
-  color: #555555;
+  color: #464646;
   margin: 4px 0 0 0;
 }
 
+.updatesNotice {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  color: #7F776E;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px dashed rgba(166, 166, 166, 0.4);
+}
+
+/* Responsive Breakpoints */
 @media (max-width: 768px) {
-  .tabPanel {
-    padding: 20px 16px;
+  .examplesGrid {
+    justify-content: flex-start;
+  }
+  .exampleCard {
+    width: calc(50% - 8px);
+  }
+}
+
+@media (max-width: 680px) {
+  .lightboxFooter {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 14px;
+  }
+  .lightboxActions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+  .lightboxCopyBtn,
+  .lightboxSelectBtn {
+    flex: 1;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .exampleCard {
+    width: 100%;
   }
   .capabilitiesGrid {
     grid-template-columns: 1fr;
@@ -303,4 +798,813 @@
     align-items: flex-start;
     gap: 8px;
   }
+}
+
+/* Progressive Disclosure Toggle Button */
+.viewAllExamplesWrapper {
+  display: flex;
+  justify-content: flex-start;
+  margin-top: 4px;
+}
+
+.viewAllExamplesBtn {
+  background: transparent;
+  border: 1px dashed rgba(166, 166, 166, 0.6);
+  color: #000000;
+  padding: 8px 16px;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition:
+    background-color var(--transition-fast, 150ms ease),
+    border-color var(--transition-fast, 150ms ease),
+    color var(--transition-fast, 150ms ease);
+}
+
+.viewAllExamplesBtn:hover {
+  background-color: #000000;
+  color: #FFFFFF;
+  border-color: #000000;
+  border-style: solid;
+}
+
+.viewAllExamplesBtn:active {
+  transform: scale(0.96);
+}
+
+.viewAllExamplesBtn:focus-visible {
+  outline: 2px solid #000000;
+  outline-offset: 2px;
+}
+
+/* In-Modal Filmstrip */
+.lightboxFilmstrip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background-color: #1A1918;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.25) transparent;
+  box-sizing: border-box;
+}
+
+.lightboxFilmstrip::-webkit-scrollbar {
+  height: 4px;
+}
+
+.lightboxFilmstrip::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.filmstripThumb {
+  position: relative;
+  width: 64px;
+  height: 36px;
+  flex: 0 0 64px;
+  aspect-ratio: 16 / 9;
+  background-color: #0E0D0C;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  overflow: hidden;
+  scroll-snap-align: center;
+  transition:
+    border-color var(--transition-fast, 150ms ease),
+    transform var(--transition-fast, 150ms ease),
+    opacity var(--transition-fast, 150ms ease);
+  opacity: 0.65;
+}
+
+.filmstripThumb:hover {
+  opacity: 1;
+  border-color: #FFFFFF;
+  transform: translateY(-1px);
+}
+
+.filmstripThumb.filmstripActive {
+  opacity: 1;
+  border: 2px solid #FB6320;
+  box-shadow: 0 0 0 1px #FB6320;
+}
+
+.filmstripThumb:focus-visible {
+  outline: 2px solid #FB6320;
+  outline-offset: 2px;
+}
+
+
+/* -------------------------------------------------------------------------- */
+/* NEW SECTIONS: Key Features, Supported Targets, Use Cases, FAQ Accordion, & Segmented Control */
+/* -------------------------------------------------------------------------- */
+
+/* Target Pills */
+.targetsRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.targetPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  background-color: rgba(255, 238, 221, 0.5);
+  border: 1px solid rgba(166, 166, 166, 0.4);
+  font-family: var(--font-sans);
+  font-size: 11.5px;
+  font-weight: 500;
+  color: #222222;
+  border-radius: 0px;
+  user-select: none;
+  transition:
+    background-color var(--transition-fast, 150ms ease),
+    border-color var(--transition-fast, 150ms ease);
+}
+
+.targetPill:hover {
+  background-color: #FFFFFF;
+  border-color: #FB6320;
+}
+
+/* Key Features Grid */
+.featuresGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+@media (max-width: 640px) {
+  .featuresGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.featureCard {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 14px;
+  background-color: rgba(255, 255, 255, 0.4);
+  border: 1px solid rgba(166, 166, 166, 0.35);
+  box-sizing: border-box;
+  transition:
+    border-color var(--transition-fast, 150ms ease),
+    background-color var(--transition-fast, 150ms ease);
+}
+
+.featureCard:hover {
+  background-color: #FFFFFF;
+  border-color: #000000;
+}
+
+.featureIconWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  background-color: #000000;
+  color: #FB6320;
+  flex-shrink: 0;
+  border-radius: 0px;
+}
+
+.featureContent {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.featureTitle {
+  font-family: var(--font-sans);
+  font-size: 12.5px;
+  font-weight: 600;
+  line-height: 1.3em;
+  color: #111111;
+  margin: 0;
+  text-wrap: balance;
+}
+
+.featureDesc {
+  font-family: var(--font-sans);
+  font-size: 11.5px;
+  line-height: 1.45em;
+  color: #666666;
+  margin: 0;
+  text-wrap: pretty;
+}
+
+/* When to Use / Use Cases Cards */
+.useCasesGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  .useCasesGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.useCaseCard {
+  padding: 12px 14px;
+  background-color: #FAF5EE;
+  border: 1px dashed rgba(166, 166, 166, 0.5);
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.useCaseCard:hover {
+  border-color: #FB6320;
+  border-style: solid;
+}
+
+.useCaseTitle {
+  font-family: var(--font-pixel, monospace);
+  font-size: 12px;
+  font-weight: 500;
+  color: #000000;
+  margin: 0;
+}
+
+.useCaseDesc {
+  font-family: var(--font-sans);
+  font-size: 11.5px;
+  line-height: 1.45em;
+  color: #555555;
+  margin: 0;
+  text-wrap: pretty;
+}
+
+/* FAQ Accordion */
+.faqList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+}
+
+.faqItem {
+  background-color: rgba(255, 255, 255, 0.45);
+  border: 1px solid rgba(166, 166, 166, 0.4);
+  box-sizing: border-box;
+  border-radius: 0px;
+  transition:
+    background-color var(--transition-fast, 150ms ease),
+    border-color var(--transition-fast, 150ms ease);
+}
+
+.faqItem.faqItemOpen {
+  background-color: #FFFFFF;
+  border-color: #000000;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+}
+
+.faqQuestionBtn {
+  width: 100%;
+  min-height: 44px;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 500;
+  color: #111111;
+  box-sizing: border-box;
+  transition:
+    background-color var(--transition-fast, 150ms ease),
+    color var(--transition-fast, 150ms ease),
+    transform var(--transition-fast, 150ms ease);
+}
+
+.faqQuestionBtn:active {
+  transform: scale(0.96);
+}
+
+.faqQuestionBtn:focus-visible {
+  outline: 2px solid #FB6320;
+  outline-offset: -2px;
+}
+
+.faqQuestionTitle {
+  flex: 1;
+  text-wrap: balance;
+}
+
+.faqChevron {
+  color: #666666;
+  flex-shrink: 0;
+  transition: transform 200ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.faqChevronOpen {
+  transform: rotate(180deg);
+  color: #FB6320;
+}
+
+.faqAnswerPanel {
+  padding: 0 16px 14px 16px;
+  border-top: 1px solid rgba(166, 166, 166, 0.15);
+  animation: faqSlideDown 200ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes faqSlideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.faqAnswerText {
+  font-family: var(--font-sans);
+  font-size: 12.5px;
+  line-height: 1.6em;
+  color: #4A4A4A;
+  margin: 8px 0 0;
+  text-wrap: pretty;
+}
+
+/* SKILL.MD Dual Segmented Toggle & Formatted Guide */
+.segmentedControl {
+  display: inline-flex;
+  align-items: center;
+  height: 32px;
+  background-color: #F7EFE6;
+  border: 1px solid rgba(166, 166, 166, 0.5);
+  box-sizing: border-box;
+  margin-left: auto;
+}
+
+.segmentedBtn {
+  height: 100%;
+  padding: 0 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  border: none;
+  font-family: var(--font-sans);
+  font-size: 11.5px;
+  font-weight: 500;
+  color: #444444;
+  cursor: pointer;
+  transition:
+    background-color var(--transition-fast, 150ms ease),
+    color var(--transition-fast, 150ms ease);
+}
+
+.segmentedBtn:active {
+  transform: scale(0.96);
+}
+
+.segmentedBtn.segmentedBtnActive {
+  background-color: #000000;
+  color: #FFFFFF;
+}
+
+.segmentedBtn:focus-visible {
+  outline: 2px solid #FB6320;
+  outline-offset: -2px;
+}
+
+/* Documentation Guide Editorial Layout (Figma Node 897:9522 Reference) */
+.guideContainer {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 36px 40px;
+  background-color: #FFFFFF;
+  border: 1px solid rgba(166, 166, 166, 0.35);
+  box-sizing: border-box;
+}
+
+@media (max-width: 768px) {
+  .guideContainer {
+    padding: 22px 18px;
+  }
+}
+
+/* Frontmatter Table */
+.frontmatterTable {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin-bottom: 24px;
+}
+
+.frontmatterRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 28px;
+  padding: 10px 0;
+}
+
+.frontmatterLabel {
+  width: 120px;
+  flex-shrink: 0;
+  font-family: var(--font-sans, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #111827;
+  letter-spacing: -0.01em;
+}
+
+.frontmatterValue {
+  font-family: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, monospace);
+  font-size: 13.5px;
+  color: #374151;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+.frontmatterValueDesc {
+  font-family: var(--font-sans, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: #374151;
+}
+
+.frontmatterDivider {
+  height: 1px;
+  background-color: #E5E7EB;
+  width: 100%;
+  margin: 4px 0;
+}
+
+/* Typography Hierarchy */
+.docTitle {
+  font-family: var(--font-sans, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
+  font-size: 32px;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  color: #111827;
+  line-height: 1.15;
+  margin: 28px 0 16px 0;
+}
+
+.docLead {
+  font-family: var(--font-sans, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
+  font-size: 15.5px;
+  line-height: 1.6;
+  color: #4B5563;
+  margin: 0 0 24px 0;
+}
+
+.docSectionHeading {
+  font-family: var(--font-sans, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
+  font-size: 19.5px;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  color: #111827;
+  margin: 32px 0 14px 0;
+  line-height: 1.3;
+}
+
+.docSubHeading {
+  font-family: var(--font-sans, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
+  font-size: 16px;
+  font-weight: 600;
+  color: #1F2937;
+  margin: 24px 0 10px 0;
+}
+
+.docParagraph {
+  font-family: var(--font-sans, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
+  font-size: 14.5px;
+  line-height: 1.65;
+  color: #374151;
+  margin: 0 0 16px 0;
+}
+
+/* Inline Code Badge / Pill (Matching Figma Reference Screenshot) */
+.inlineCodeBadge {
+  display: inline-block;
+  font-family: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, monospace);
+  font-size: 0.88em;
+  font-weight: 500;
+  color: #111827;
+  background-color: #F3F4F6;
+  border: 1px solid #E5E7EB;
+  border-radius: 4px;
+  padding: 1.5px 6px;
+  margin: 0 2px;
+  vertical-align: baseline;
+  line-height: 1.35;
+}
+
+/* Ordered & Bullet Lists */
+.docOrderedList {
+  list-style-type: decimal;
+  padding-left: 22px;
+  margin: 12px 0 24px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.docBulletList {
+  list-style-type: disc;
+  padding-left: 22px;
+  margin: 12px 0 24px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.docListItem {
+  font-family: var(--font-sans, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
+  font-size: 14.5px;
+  line-height: 1.65;
+  color: #374151;
+}
+
+/* Markdown Table */
+.docTableWrapper {
+  overflow-x: auto;
+  width: 100%;
+  margin: 18px 0 24px 0;
+  border: 1px solid #E5E7EB;
+  border-radius: 6px;
+}
+
+.docTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-sans, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
+  font-size: 13.5px;
+  text-align: left;
+}
+
+.docTable th {
+  padding: 10px 14px;
+  background-color: #F9FAFB;
+  border-bottom: 1px solid #E5E7EB;
+  font-weight: 600;
+  color: #111827;
+  font-size: 12.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.docTable td {
+  padding: 12px 14px;
+  border-bottom: 1px solid #F3F4F6;
+  color: #374151;
+  line-height: 1.5;
+}
+
+.docTable tr:last-child td {
+  border-bottom: none;
+}
+
+/* MCP Market Style Key Features & Use Cases (Matching User Screenshot) */
+.mcpSectionGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+}
+
+.mcpSectionHeading {
+  font-family: var(--font-sans);
+  font-size: 16px;
+  font-weight: 600;
+  color: #111111;
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+
+.mcpGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: 36px;
+  row-gap: 22px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+@media (max-width: 768px) {
+  .mcpGrid {
+    grid-template-columns: 1fr;
+    row-gap: 16px;
+  }
+}
+
+.mcpItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding-left: 14px;
+  border-left: 1.5px solid #E5E5E5;
+  min-height: 40px;
+  box-sizing: border-box;
+  transition: border-color var(--transition-fast, 150ms ease);
+}
+
+.mcpItem:hover {
+  border-left-color: var(--color-brand, #FB6320);
+}
+
+.mcpIndex {
+  font-family: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace);
+  font-size: 13.5px;
+  font-weight: 500;
+  color: #A09A93;
+  letter-spacing: 0.02em;
+  flex-shrink: 0;
+  margin-top: 1px;
+  font-variant-numeric: tabular-nums;
+  user-select: none;
+}
+
+.mcpText {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.5;
+  color: #2D2D2D;
+  margin: 0;
+  text-wrap: pretty;
+}
+
+/* World-Class Prompt Editor View */
+.promptEditorWrapper {
+  background-color: #121212;
+  border: 1px solid #2A2A2A;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.promptEditorHeaderBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 16px;
+  background-color: #1A1A1A;
+  border-bottom: 1px solid #282828;
+}
+
+.promptWindowDots {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.promptDot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  opacity: 0.85;
+}
+
+.promptDotRed { background-color: #EF4444; }
+.promptDotYellow { background-color: #F59E0B; }
+.promptDotGreen { background-color: #10B981; }
+
+.promptFileTab {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono, monospace);
+  font-size: 11.5px;
+  color: #E5E5E5;
+  background-color: #121212;
+  padding: 3px 10px;
+  border: 1px solid #2A2A2A;
+}
+
+.promptDotAccent {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background-color: #FB6320;
+}
+
+.promptLineCount {
+  font-family: var(--font-mono, monospace);
+  font-size: 11px;
+  color: #737373;
+}
+
+.promptContentScroll {
+  padding: 16px 20px;
+  overflow-x: auto;
+  font-family: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace);
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: #D4D4D4;
+  -webkit-font-smoothing: antialiased;
+}
+
+.promptLineRow {
+  display: flex;
+  align-items: baseline;
+  min-height: 20px;
+}
+
+.promptLineGutter {
+  width: 32px;
+  flex-shrink: 0;
+  text-align: right;
+  padding-right: 16px;
+  color: #525252;
+  user-select: none;
+  font-variant-numeric: tabular-nums;
+  font-size: 11px;
+}
+
+.promptLineText {
+  color: #E5E5E5;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.promptH1Row {
+  margin-top: 4px;
+  margin-bottom: 6px;
+}
+
+.promptH1Text {
+  color: #FFFFFF;
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: -0.01em;
+}
+
+.promptH2Row {
+  margin-top: 14px;
+  margin-bottom: 4px;
+}
+
+.promptH2Text {
+  color: #FB6320;
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: 0.01em;
+}
+
+.promptBulletText {
+  color: #D4D4D4;
+}
+
+.promptBulletMark {
+  color: #FB6320;
+  margin-right: 6px;
+  font-weight: bold;
+}
+
+.promptNumMark {
+  color: #F59E0B;
+  font-weight: 600;
+  margin-right: 6px;
+}
+
+.filePill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono, monospace);
+  font-size: 12px;
+  font-weight: 600;
+  color: #000000;
+  background-color: rgba(0, 0, 0, 0.06);
+  padding: 3px 8px;
+  border-radius: 0px;
+}
+
+.metaDivider {
+  color: #A3A3A3;
+}
+
+.metaSubtitle {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  color: #666666;
 }

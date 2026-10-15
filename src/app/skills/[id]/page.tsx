@@ -56,11 +56,18 @@ export default function SkillDynamicPage({ params }: SkillPageProps) {
         description: matchedSkill.description,
         installPrompt: matchedSkill.installPrompt,
         previewImage: matchedSkill.previewImage || DEFAULT_DETAIL_SKILL.previewImage,
-        thumbnails: [
-          matchedSkill.previewImage || DEFAULT_DETAIL_SKILL.previewImage,
-          "/figma/node_751_5608.png",
-          "/figma/node_751_5609.png",
-        ],
+        thumbnails:
+          matchedSkill.id === "visual-canvas-deck" || !matchedSkill.previewImage
+            ? [
+                "/figma/visual_canvas_deck_slide1.png",
+                "/figma/visual_canvas_deck_slide2.png",
+                "/figma/visual_canvas_deck_slide3.png",
+              ]
+            : [
+                matchedSkill.previewImage,
+                "/figma/visual_canvas_deck_slide2.png",
+                "/figma/visual_canvas_deck_slide3.png",
+              ],
         models: matchedSkill.models,
         roles: DEFAULT_DETAIL_SKILL.roles,
       }

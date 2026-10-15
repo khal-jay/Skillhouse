@@ -36,6 +36,30 @@ export interface SkillItem {
 
 export const MARKETPLACE_SKILLS: SkillItem[] = [
   {
+    id: "build-with-better-design",
+    title: "Build with Better Design",
+    version: "1.0.0",
+    price: "Free",
+    isFree: true,
+    isFeatured: true,
+    description: "Build or redesign a web or mobile interface on a Better Design design system. Use when the user asks for an app, site, page, dashboard or component and wants it built on Better Design, or asks to choose, create or install a design system.",
+    installPrompt: "npx @skillhouse/cli install build-with-better-design",
+    previewImage: "/figma/marketplace_sample_card.png",
+    models: [
+      "/figma/agent-claude.png",
+      "/figma/agent-antigravity.png",
+      "/figma/agent-cursor.png",
+      "/figma/agent-codex.png",
+    ],
+    roles: ["designer", "swe", "founder"],
+    output: "web",
+    useCase: "web-design",
+    category: "Engineering",
+    installs: 5120,
+    rating: 4.9,
+    createdAt: "2026-10-14",
+  },
+  {
     id: "visual-canvas-deck",
     title: "Visual Canvas Deck",
     version: "v1.0.1",
@@ -44,7 +68,7 @@ export const MARKETPLACE_SKILLS: SkillItem[] = [
     isFeatured: true,
     description: "Create an exploratory presentation that turns a rough brief into editable spatial compositions and a coherent deck. It supports visual iteration through addressable canvases, clear outline approval, and a browser-ready presentation. Every deck can be edited in the browser and exported as an editable PowerPoint file.",
     installPrompt: "npx skillhouse add visual-canvas-deck",
-    previewImage: "/figma/node_751_5606.png",
+    previewImage: "/figma/visual_canvas_deck_slide1.png",
     models: [
       "/figma/agent-claude.png",
       "/figma/agent-antigravity.png",
@@ -68,12 +92,11 @@ export const MARKETPLACE_SKILLS: SkillItem[] = [
     isFeatured: true,
     description: "Generates cinematic 4K video promos, animated kinetic text, and product reels directly from prompt specifications.",
     installPrompt: "npx create-agent-skill pixel-promo-video",
-    previewImage: "/figma/marketplace_sample_card.png",
+    previewImage: "/figma/pixel_promo_cover.jpg",
     models: [
-      "/figma/agent-claude.png",
-      "/figma/agent-antigravity.png",
-      "/figma/agent-kimi.png",
-      "/figma/agent-codex.png",
+      "/figma/badge_starburst.svg",
+      "/figma/badge_rainbow_arch.png",
+      "/figma/badge_kling.png",
     ],
     roles: ["content-creator", "marketer", "designer"],
     output: "video",
@@ -1084,7 +1107,7 @@ export function MarketplaceView({
   const hasMore = visibleCount < gridItems.length;
 
   useEffect(() => {
-    if (!hasMore || isLoadingMore) return;
+    if (effectiveLoading || !hasMore || isLoadingMore) return;
 
     const sentinel = sentinelRef.current;
     if (!sentinel) return;
@@ -1099,15 +1122,15 @@ export function MarketplaceView({
           setTimeout(() => {
             setVisibleCount((prev) => Math.min(prev + PAGE_SIZE, gridItems.length));
             setIsLoadingMore(false);
-          }, 650);
+          }, 300);
         }
       },
-      { rootMargin: "100px", threshold: 0.1 }
+      { rootMargin: "350px", threshold: 0.05 }
     );
 
     observer.observe(sentinel);
     return () => observer.disconnect();
-  }, [hasMore, isLoadingMore, gridItems.length]);
+  }, [hasMore, isLoadingMore, gridItems.length, effectiveLoading, visibleCount]);
 
   const handleManualLoadMore = () => {
     if (!hasMore || isLoadingMore) return;
@@ -1115,7 +1138,7 @@ export function MarketplaceView({
     setTimeout(() => {
       setVisibleCount((prev) => Math.min(prev + PAGE_SIZE, gridItems.length));
       setIsLoadingMore(false);
-    }, 600);
+    }, 250);
   };
 
   const displayedGridItems = gridItems.slice(0, visibleCount);
@@ -1365,7 +1388,7 @@ export function MarketplaceView({
                 id="marketplace-grid"
                 data-testid="marketplace-grid"
               >
-                {displayedGridItems.map((item) =>
+                {displayedGridItems.map((item, index) =>
                   item.type === "ad" ? (
                     <AdCard
                       key={item.id}
@@ -1437,6 +1460,13 @@ export function MarketplaceView({
                     </button>
                   </div>
                 </>
+              )}
+
+              {!hasMore && gridItems.length > PAGE_SIZE && (
+                <div className={styles.endOfCatalogIndicator} data-testid="end-of-catalog">
+                  <span className={styles.endOfCatalogDot} />
+                  <span>You’ve viewed all {gridItems.length} skills in the marketplace</span>
+                </div>
               )}
 
 

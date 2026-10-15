@@ -28,6 +28,8 @@ export interface SkillDetailDrawerProps {
   onToggleBookmark?: (skillId: string) => void;
   isInstalled?: boolean;
   onToggleInstall?: (skillId: string) => void;
+  onOpenLoginModal?: () => void;
+  isSignedIn?: boolean;
 }
 
 type DrawerTab = "install" | "overview" | "playground";

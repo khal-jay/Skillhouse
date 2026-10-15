@@ -1,201 +1,153 @@
-/* SkillDetailPage Component Styles
- * Balanced Two-Column Layout (matching site container & benchmark)
- * Canvas Background: #FFEEDD
- * Main Container: max-width 1400px with 40px padding (aligned with NavBar & Marketplace)
- */
+/* SkillDetailPage Component Styles - Complete Figma Node 751:5602 / 4621:371214 Spec */
 
 .pageContainer {
   min-height: 100vh;
-  width: 100%;
-  background-color: var(--color-bg-page, #FFEEDD);
-  color: var(--color-text-body, #242426);
   display: flex;
   flex-direction: column;
+  background-color: var(--color-bg-page, #FFEEDD);
+  color: var(--color-dark, #000000);
 }
 
 .mainContent {
-  flex: 1;
   width: 100%;
-  max-width: 1400px;
+  max-width: 1440px;
   margin: 0 auto;
-  padding: 0 40px 80px 40px;
+  padding: 32px 48px 64px 48px;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  gap: 36px;
+  gap: 48px;
 }
 
-/* 1. Subheader Breadcrumbs Strip (Exact Figma Node 878:3503) */
-.breadcrumbBar {
-  width: 100%;
-  border-bottom: 1px solid var(--color-border, rgba(166, 166, 166, 0.5));
-  border-top: 1px solid rgba(166, 166, 166, 0.25);
-  background-color: var(--color-bg-page, #FFEEDD);
-  box-sizing: border-box;
-  position: -webkit-sticky;
-  position: sticky;
-  top: 72px;
-  z-index: 90;
-}
-
-.breadcrumbBarInner {
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 14px 40px;
+/* Clean Editorial Breadcrumb Navigation (Figma Node 751:5871) */
+.breadcrumbRow {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  min-height: 63px;
-  box-sizing: border-box;
-}
-
-.breadcrumbGroup {
-  display: inline-flex;
   align-items: center;
   gap: 12px;
   min-height: 28px;
   flex-wrap: wrap;
+  width: 100%;
 }
 
 .backButton {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  background: transparent;
+  background: none;
   border: none;
-  border-radius: 8px;
-  padding: 6px 10px;
-  margin-left: -10px;
-  color: #464646;
+  padding: 4px 8px;
+  margin-left: -8px;
+  color: #54392D;
   font-family: var(--font-sans);
   font-size: 14px;
-  font-weight: 590;
-  line-height: 1.45;
+  font-weight: 500;
   cursor: pointer;
-  transition: color 150ms ease, background-color 150ms ease, transform 150ms ease;
+  user-select: none;
+  transition: color var(--transition-fast, 150ms ease), transform var(--transition-fast, 150ms ease);
 }
 
 .backButton:hover {
-  background-color: rgba(0, 0, 0, 0.04);
-  color: #000000;
+  color: #FB6320;
+  transform: translateX(-2px);
 }
 
 .backButton:active {
   transform: scale(0.96);
 }
 
-.breadcrumbDivider {
+.divider {
   width: 1px;
-  height: 20px;
-  background-color: rgba(166, 166, 166, 0.5);
+  height: 16px;
+  background-color: #CDB7AE;
   flex-shrink: 0;
-  margin: 0 4px;
 }
 
-.breadcrumbNav {
-  display: inline-flex;
-  align-items: center;
-  min-width: 0;
-}
-
-.breadcrumbTrail {
+.breadcrumbList {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  font-family: var(--font-sans);
-  font-size: 13px;
-  color: #464646;
-  list-style: none;
   margin: 0;
   padding: 0;
-}
-
-.breadcrumbHomeIcon {
-  color: #7F776E;
-  flex-shrink: 0;
-  margin-right: 4px;
-  display: inline-block;
-  vertical-align: middle;
-}
-
-.breadcrumbHomeText {
-  display: inline;
-}
-
-.breadcrumbChevron {
-  display: inline-flex;
-  align-items: center;
-  color: #A6A6A6;
-  font-size: 13px;
-}
-
-.activeSkillPill {
-  display: inline-flex;
-  align-items: center;
-  background-color: #FFE3D6;
-  border-radius: 4px;
-  padding: 3px 8px;
+  list-style: none;
   font-family: var(--font-sans);
   font-size: 13px;
+  color: #7F776E;
+  flex-wrap: wrap;
+}
+
+.breadcrumbItem {
+  display: inline-flex;
+  align-items: center;
+}
+
+.breadcrumbLink {
+  color: #7F776E;
+  text-decoration: none;
+  font-weight: 400;
+  transition: color var(--transition-fast, 150ms ease);
+}
+
+.breadcrumbLink:hover {
+  color: #000000;
+}
+
+.breadcrumbSeparator {
+  color: #A6A6A6;
+  font-size: 12px;
+  user-select: none;
+}
+
+.breadcrumbCurrent {
+  color: #000000;
   font-weight: 500;
-  color: #464646;
-  letter-spacing: -0.005em;
 }
 
-@media (max-width: 992px) {
-  .breadcrumbBarInner {
-    padding: 12px 20px;
-  }
-}
-
-/* 2. Main Two-Column Layout (Balanced Proportions) */
+/* Two-Column Main Layout */
 .twoColumnLayout {
   display: grid;
   grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
-  gap: 48px;
+  gap: 40px;
   align-items: start;
   width: 100%;
-  position: relative;
 }
 
-/* Left Column: Sticky Media Preview Gallery */
+/* Left Column: Media Preview Gallery */
 .galleryColumn {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 20px;
   width: 100%;
   min-width: 0;
-  position: -webkit-sticky;
-  position: sticky;
-  top: 135px; /* 72px navbar + 63px breadcrumb bar = flush with breadcrumb line */
-  align-self: start;
-  height: -webkit-fit-content;
-  height: fit-content;
-  z-index: 10;
-}
-
-/* Editorial Media Showcase Frame - Hanging from Breadcrumb Border */
-.editorialFrameContainer {
-  position: relative;
-  width: 100%;
-  background-color: #FFECD8;
-  border: 1px solid var(--color-border, rgba(166, 166, 166, 0.5));
-  border-top: none; /* Merges seamlessly into the breadcrumb bottom border line */
-  padding: 24px;
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
 }
 
 .mainPreviewCanvas {
   width: 100%;
-  aspect-ratio: 16 / 10;
-  min-height: 380px;
-  max-height: 500px;
-  background-color: #FFFFFF;
-  border: 1px solid rgba(0, 0, 0, 0.15);
+  aspect-ratio: 16 / 9;
+  background-color: #FFFBF5;
+  border: 1px solid rgba(166, 166, 166, 0.5);
+  outline: 1px solid oklch(0 0 0 / 0.1);
+  outline-offset: -1px;
+  box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.04);
   position: relative;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  transition: border-color var(--transition-fast, 150ms ease),
+              box-shadow var(--transition-fast, 150ms ease);
+}
+
+.mainPreviewCanvas:hover {
+  border-color: #54392D;
+  box-shadow: 0px 8px 24px rgba(84, 57, 45, 0.08);
+}
+
+.imageStageWrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -209,133 +161,139 @@
 }
 
 .mainPreviewCanvas:hover .mainPreviewImage {
-  transform: scale(1.02);
+  transform: scale(1.01);
 }
 
-/* Bisecting Circular Navigation Arrows (Reference Image Style) */
-.bisectingArrow {
+/* Stage Counter Pill */
+.stageCounterPill {
   position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  border: 1px solid var(--color-border, rgba(166, 166, 166, 0.5));
-  background-color: #FFFFFF;
-  color: #54392D;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  z-index: 25;
-  padding: 0;
-  box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.08);
-  transition: background-color 150ms ease, color 150ms ease, border-color 150ms ease, transform 150ms ease;
-}
-
-.bisectingArrow:hover {
-  background-color: #54392D;
-  border-color: #54392D;
+  top: 14px;
+  right: 14px;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
   color: #FFFFFF;
+  font-family: var(--font-mono, monospace);
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 8px;
+  letter-spacing: 0.05em;
+  z-index: 5;
+  pointer-events: none;
 }
 
-.bisectingArrow:active {
-  transform: translateY(-50%) scale(0.96);
+/* Thumbnails Selector Row (2 - 4 items) */
+.thumbnailsRow {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
-.bisectingArrowLeft {
-  left: -20px;
-}
-
-.bisectingArrowRight {
-  right: -20px;
-}
-
-/* Frame Footer Row with Slide Dots and Boxed Badge */
-.frameFooterRow {
+/* Scalable Horizontal Carousel Strip (5+ items) */
+.thumbnailsCarouselWrapper {
+  position: relative;
+  width: 100%;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  margin-top: 14px;
+  box-sizing: border-box;
 }
 
-.slidePagination {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.slideDot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  border: 1px solid var(--color-border, rgba(166, 166, 166, 0.5));
-  background-color: #FFFFFF;
-  cursor: pointer;
-  padding: 0;
-  transition: background-color 150ms ease, border-color 150ms ease, transform 150ms ease;
-}
-
-.slideDot:hover {
-  border-color: #54392D;
-}
-
-.slideDot:active {
-  transform: scale(0.96);
-}
-
-.slideDotActive {
-  background-color: #FB6320;
-  border-color: #FB6320;
-  transform: scale(1.15);
-}
-
-.boxedIndexBadge {
-  border: 1px solid var(--color-border, rgba(166, 166, 166, 0.5));
-  background-color: #FFFFFF;
-  padding: 3px 8px;
-  font-family: var(--font-sans);
-  font-size: 13px;
-  font-weight: 700;
-  line-height: 1;
-  color: #54392D;
-  display: inline-flex;
-  align-items: center;
-  gap: 1px;
-  font-variant-numeric: tabular-nums;
-  box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.05);
-}
-
-.boxedIndexAccent {
-  color: #FB6320;
-}
-
-/* Thumbnails Selector Row */
-.thumbnailsRow {
+.thumbnailsScrollTrack {
   display: flex;
   gap: 12px;
   width: 100%;
-  flex-wrap: wrap;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  padding: 2px 0;
+  box-sizing: border-box;
+}
+
+.thumbnailsScrollTrack::-webkit-scrollbar {
+  display: none;
+}
+
+.thumbnailsScrollTrack .thumbnailCard {
+  flex: 0 0 160px;
+  scroll-snap-align: start;
+}
+
+/* Carousel Prev/Next Buttons */
+.carouselNavBtn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(4px);
+  color: #FFFFFF;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  cursor: pointer;
+  z-index: 10;
+  transition:
+    background-color 150ms ease,
+    border-color 150ms ease,
+    transform 150ms ease;
+}
+
+.carouselNavBtn:hover {
+  background-color: #FB6320;
+  border-color: #FB6320;
+}
+
+.carouselNavBtn:active {
+  transform: translateY(-50%) scale(0.96);
+}
+
+.carouselNavBtn:focus-visible {
+  outline: 2px solid #FB6320;
+  outline-offset: 2px;
+}
+
+.carouselNavBtnPrev {
+  left: -12px;
+}
+
+.carouselNavBtnNext {
+  right: -12px;
 }
 
 .thumbnailCard {
-  width: 104px;
-  height: 72px;
-  border: 1px solid rgba(166, 166, 166, 0.5);
-  background-color: #FFECD8;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  height: auto;
+  min-height: 0;
+  border: 1px solid rgba(166, 166, 166, 0.45);
+  outline: 1px solid oklch(0 0 0 / 0.08);
+  outline-offset: -1px;
+  background-color: #FFFBF5;
   padding: 0;
   margin: 0;
   cursor: pointer;
   position: relative;
   overflow: hidden;
   box-sizing: border-box;
-  transition: border-color 150ms ease, transform 150ms ease;
+  display: block;
+  border-radius: 0px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  transition:
+    border-color 150ms cubic-bezier(0.16, 1, 0.3, 1),
+    transform 150ms cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 150ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .thumbnailCard:hover {
-  border-color: #111111;
+  border-color: #54392D;
   transform: translateY(-2px);
+  box-shadow: 0 4px 14px rgba(84, 57, 45, 0.12);
 }
 
 .thumbnailCard:active {
@@ -343,43 +301,77 @@
 }
 
 .thumbnailCard.active {
-  border: 2px solid #FB6320;
+  border: 2px solid #000000;
+  box-shadow: 0 0 0 1px #000000, 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
-.thumbnailImage {
+.thumbnailCard:focus-visible {
+  outline: 2px solid #000000;
+  outline-offset: 2px;
+}
+
+.thumbImageWrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.thumbnailImg {
   object-fit: cover;
   width: 100%;
   height: 100%;
+  transition: transform var(--transition-fast, 150ms ease);
 }
 
-/* Left Specs Wrapper */
-.specsSection {
-  width: 100%;
-  margin-top: 8px;
+.thumbnailCard:hover .thumbnailImg {
+  transform: scale(1.03);
 }
 
-/* Right Column: Composite Header Panel */
+.visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Right Column: Composite Header Panel - Fixed / Sticky on Scroll */
 .panelColumn {
   width: 100%;
   min-width: 0;
-  padding-top: 28px;
+  padding-top: 0;
+  position: -webkit-sticky;
+  position: sticky;
+  top: 144px;
+  align-self: start;
 }
 
-/* 3. Similar Skills Section & Bisecting Carousel */
+/* 3. Similar Skills Section (Figma Node 4621:371369) */
 .similarSection {
-  margin-top: 36px;
+  margin-top: 32px;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 24px;
   width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .similarHeaderRow {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-bottom: 1px solid var(--color-border, rgba(166, 166, 166, 0.5));
+  border-bottom: 1px solid #CDB7AE;
   padding-bottom: 12px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .similarTitle {
@@ -388,90 +380,85 @@
   font-weight: 600;
   color: #000000;
   margin: 0;
+  letter-spacing: -0.01em;
 }
 
-.similarCounterBadge {
-  border: 1px solid var(--color-border, rgba(166, 166, 166, 0.5));
-  background-color: #FFFFFF;
-  padding: 3px 8px;
-  font-family: var(--font-sans);
-  font-size: 13px;
-  font-weight: 700;
-  font-variant-numeric: tabular-nums;
-  color: #54392D;
-}
-
-.similarCounterAccent {
-  color: #FB6320;
-}
-
-.similarCarouselContainer {
-  position: relative;
-  width: 100%;
-}
-
-.similarBisectingArrow {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  border: 1px solid var(--color-border, rgba(166, 166, 166, 0.5));
-  background-color: #FFFFFF;
-  color: #54392D;
+.carouselControls {
   display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.carouselButton {
+  width: 32px;
+  height: 32px;
+  border: 1px solid #A6A6A6;
+  background-color: transparent;
+  color: #000000;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  z-index: 25;
-  padding: 0;
-  box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.08);
-  transition: background-color 150ms ease, color 150ms ease, border-color 150ms ease, transform 150ms ease;
+  border-radius: 0px;
+  transition:
+    background-color var(--transition-fast, 150ms ease),
+    border-color var(--transition-fast, 150ms ease),
+    transform var(--transition-fast, 150ms ease);
 }
 
-.similarBisectingArrow:hover:not(:disabled) {
-  background-color: #54392D;
-  border-color: #54392D;
+.carouselButton:hover:not(:disabled) {
+  background-color: #000000;
   color: #FFFFFF;
+  border-color: #000000;
 }
 
-.similarBisectingArrow:active:not(:disabled) {
-  transform: translateY(-50%) scale(0.96);
+.carouselButton:active:not(:disabled) {
+  transform: scale(0.96);
 }
 
-.similarBisectingArrow:disabled {
+.carouselButton:disabled {
   opacity: 0.35;
   cursor: not-allowed;
-  border-color: #CDB7AE;
-}
-
-.similarBisectingArrowLeft {
-  left: -22px;
-}
-
-.similarBisectingArrowRight {
-  right: -22px;
+  border-color: rgba(166, 166, 166, 0.4);
 }
 
 .similarGrid {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 20px;
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  gap: 16px;
   width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.similarGrid > * {
+  flex: 1 1 0px;
+  min-width: 0;
+  max-width: 100%;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 /* Responsive Breakpoints */
-@media (max-width: 1080px) {
+@media (max-width: 1024px) {
   .similarGrid {
+    display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+  }
+
+  .similarGrid > * {
+    flex: initial;
+    width: 100%;
+    min-width: 0;
   }
 }
 
-@media (max-width: 992px) {
+@media (max-width: 1024px) {
   .mainContent {
-    max-width: 100%;
-    padding: 20px 20px 64px 20px;
+    padding: 24px 20px 48px 20px;
+    gap: 32px;
   }
 
   .twoColumnLayout {
@@ -479,28 +466,20 @@
     gap: 32px;
   }
 
-  .galleryColumn {
-    position: static;
-    top: auto;
-    width: 100%;
-    height: auto;
-  }
-
+  .galleryColumn,
   .panelColumn {
     width: 100%;
+    position: static;
   }
 
   .mainPreviewCanvas {
-    width: 100%;
-    height: auto;
-    aspect-ratio: 16 / 10;
-    min-height: auto;
+    aspect-ratio: 16 / 9;
   }
 }
 
-@media (max-width: 600px) {
+@media (max-width: 640px) {
   .mainContent {
-    padding: 16px 16px 48px 16px;
+    padding: 16px 12px 32px 12px;
   }
 
   .similarGrid {
@@ -508,13 +487,6 @@
   }
 
   .thumbnailsRow {
-    overflow-x: auto;
-    flex-wrap: nowrap;
-    padding-bottom: 4px;
-  }
-
-  .thumbnailCard {
-    flex-shrink: 0;
+    gap: 8px;
   }
 }
-

@@ -317,15 +317,123 @@ describe("SkillDetailPage Component (Figma Node 751:5602)", () => {
     }
   });
 
-  it("renders documentation tabs viewer and similar skills access badges", () => {
+  it("renders documentation tabs viewer and ensures orange access badge is removed", () => {
     render(<SkillDetailPage />);
     expect(screen.getByTestId("skill-doc-viewer")).toBeInTheDocument();
     expect(screen.getByTestId("tab-overview-btn")).toBeInTheDocument();
     expect(screen.getByTestId("tab-skill-md-btn")).toBeInTheDocument();
     expect(screen.getByTestId("tab-reviews-btn")).toBeInTheDocument();
 
-    const accessBadges = screen.getAllByTestId("skill-card-access-badge");
-    expect(accessBadges.length).toBeGreaterThan(0);
-    expect(accessBadges[0]).toHaveTextContent(/included in pass|free/i);
+    expect(screen.queryByTestId("skill-card-access-badge")).not.toBeInTheDocument();
+  });
+
+  it("conditionally renders carousel controls only when similar skills count exceeds 4", () => {
+    const { unmount } = render(<SkillDetailPage />);
+    expect(screen.getByTestId("similar-next-btn")).toBeInTheDocument();
+    expect(screen.getByTestId("similar-prev-btn")).toBeInTheDocument();
+    unmount();
+  });
+
+  it("scales gallery gracefully for single image by hiding thumbnail strip", () => {
+    const singleSkill = {
+      id: "single-slide-skill",
+      title: "Single Slide Skill",
+      version: "v1.0.0",
+      price: "$9",
+      description: "One single preview slide.",
+      installPrompt: "npx @skillhouse/cli install single-slide-skill",
+      category: "Tools",
+      previewImage: "/figma/slide1.png",
+      thumbnails: ["/figma/slide1.png"],
+    };
+    render(<SkillDetailPage skill={singleSkill} />);
+    expect(screen.getByTestId("skill-detail-main-preview")).toBeInTheDocument();
+    expect(screen.queryByTestId("thumbnail-tab-0")).not.toBeInTheDocument();
+    expect(screen.queryByTestId("gallery-stage-counter")).not.toBeInTheDocument();
+    expect(screen.queryByTestId("thumbnails-carousel-wrapper")).not.toBeInTheDocument();
+  });
+
+  it("scales gallery to horizontal carousel when 5 or more thumbnails exist", () => {
+    const multiSkill = {
+      id: "multi-slide-skill",
+      title: "Multi Slide Skill",
+      version: "v2.0.0",
+      price: "$29",
+      description: "A comprehensive 8-slide presentation deck.",
+      installPrompt: "npx @skillhouse/cli install multi-slide-skill",
+      category: "Presentations",
+      previewImage: "/figma/slide1.png",
+      thumbnails: [
+        "/figma/slide1.png",
+        "/figma/slide2.png",
+        "/figma/slide3.png",
+        "/figma/slide4.png",
+        "/figma/slide5.png",
+        "/figma/slide6.png",
+        "/figma/slide7.png",
+        "/figma/slide8.png",
+      ],
+    };
+    render(<SkillDetailPage skill={multiSkill} />);
+    
+    // Assert carousel wrapper and navigation buttons are rendered
+    expect(screen.getByTestId("thumbnails-carousel-wrapper")).toBeInTheDocument();
+    expect(screen.getByTestId("thumb-carousel-prev-btn")).toBeInTheDocument();
+    expect(screen.getByTestId("thumb-carousel-next-btn")).toBeInTheDocument();
+    expect(screen.getByTestId("gallery-stage-counter")).toHaveTextContent("01 / 08");
+
+    // Click next chevron
+    const nextChevron = screen.getByTestId("thumb-carousel-next-btn");
+    fireEvent.click(nextChevron);
+    expect(screen.getByTestId("gallery-stage-counter")).toHaveTextContent("02 / 08");
+
+    // Click previous chevron
+    const prevChevron = screen.getByTestId("thumb-carousel-prev-btn");
+    fireEvent.click(prevChevron);
+    expect(screen.getByTestId("gallery-stage-counter")).toHaveTextContent("01 / 08");
+
+    // Keyboard arrow navigation on scroll track
+    const track = screen.getByTestId("thumbnails-scroll-track");
+    fireEvent.keyDown(track, { key: "ArrowRight" });
+    expect(screen.getByTestId("gallery-stage-counter")).toHaveTextContent("02 / 08");
+    fireEvent.keyDown(track, { key: "ArrowLeft" });
+    expect(screen.getByTestId("gallery-stage-counter")).toHaveTextContent("01 / 08");
+  });
+
+  it("clamps active thumbnail index safely when switching to a skill with fewer thumbnails", () => {
+    const skillA = {
+      id: "skill-a",
+      title: "Skill A",
+      version: "v1.0.0",
+      price: "$19",
+      description: "Skill with 6 slides.",
+      installPrompt: "npx skill-a",
+      category: "Tools",
+      previewImage: "/figma/slide1.png",
+      thumbnails: ["/s1.png", "/s2.png", "/s3.png", "/s4.png", "/s5.png", "/s6.png"],
+    };
+
+    const skillB = {
+      id: "skill-b",
+      title: "Skill B",
+      version: "v1.0.0",
+      price: "$19",
+      description: "Skill with 2 slides.",
+      installPrompt: "npx skill-b",
+      category: "Tools",
+      previewImage: "/figma/b1.png",
+      thumbnails: ["/b1.png", "/b2.png"],
+    };
+
+    const { rerender } = render(<SkillDetailPage skill={skillA} />);
+    
+    // Select thumbnail 5
+    const thumb5 = screen.getByTestId("thumbnail-tab-5");
+    fireEvent.click(thumb5);
+    expect(screen.getByTestId("gallery-stage-counter")).toHaveTextContent("06 / 06");
+
+    // Rerender with skill B that only has 2 thumbnails
+    rerender(<SkillDetailPage skill={skillB} />);
+    expect(screen.getByTestId("gallery-stage-counter")).toHaveTextContent("01 / 02");
   });
 });

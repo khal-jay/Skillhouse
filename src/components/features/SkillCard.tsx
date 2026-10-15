@@ -38,6 +38,7 @@ export interface SkillCardProps {
   installs?: number;
   accentGradient?: string;
   accessBadge?: string;
+  showOverlays?: boolean;
 }
 
 const SKELETON_TITLE_WIDTHS = ["72%", "58%", "82%", "64%", "76%", "60%", "88%", "68%"];
@@ -89,10 +90,9 @@ export const SkillCard: React.FC<SkillCardProps> = ({
   category = "Design",
   previewImage = "/figma/skill-card-preview.png",
   models = [
-    "/figma/logo-1.png",
-    "/figma/logo-2.png",
-    "/figma/logo-3.png",
-    "/figma/logo-4.png",
+    "/figma/badge_starburst.svg",
+    "/figma/badge_rainbow_arch.png",
+    "/figma/badge_kling.png",
   ],
   isBookmarked: controlledBookmarked,
   onBookmarkToggle,
@@ -102,9 +102,10 @@ export const SkillCard: React.FC<SkillCardProps> = ({
   installs,
   accentGradient,
   accessBadge,
+  showOverlays = true,
 }) => {
   const [internalBookmarked, setInternalBookmarked] = useState(false);
-  const [imageLoaded, setImageLoaded] = useState(false);
+  const [imageLoaded, setImageLoaded] = useState(true);
   const [imageError, setImageError] = useState(false);
 
   const isBookmarked = controlledBookmarked !== undefined ? controlledBookmarked : internalBookmarked;
@@ -123,15 +124,13 @@ export const SkillCard: React.FC<SkillCardProps> = ({
     const rect = e.currentTarget.getBoundingClientRect();
     const x = (e.clientX - rect.left) / rect.width - 0.5;
     const y = (e.clientY - rect.top) / rect.height - 0.5;
-    e.currentTarget.style.setProperty("--tilt-x", `${(-y * 2.5).toFixed(2)}deg`);
-    e.currentTarget.style.setProperty("--tilt-y", `${(x * 2.5).toFixed(2)}deg`);
-    e.currentTarget.style.setProperty("--tilt-lift", "-5px");
+    e.currentTarget.style.setProperty("--tilt-x", `${(-y * 1.5).toFixed(2)}deg`);
+    e.currentTarget.style.setProperty("--tilt-y", `${(x * 1.5).toFixed(2)}deg`);
   };
 
   const handlePointerLeave = (e: React.PointerEvent<HTMLDivElement>) => {
     e.currentTarget.style.removeProperty("--tilt-x");
     e.currentTarget.style.removeProperty("--tilt-y");
-    e.currentTarget.style.removeProperty("--tilt-lift");
   };
 
     const gradient = accentGradient || getCardGradient(id || title);
@@ -164,7 +163,7 @@ export const SkillCard: React.FC<SkillCardProps> = ({
           data-testid="skill-card-gradient"
         />
 
-        {previewImage && !imageError && (
+        {previewImage && !imageError ? (
           <Image
             src={previewImage}
             alt={title}
@@ -175,17 +174,13 @@ export const SkillCard: React.FC<SkillCardProps> = ({
             onError={() => setImageError(true)}
             unoptimized
           />
-        )}
+        ) : null}
         
+        {showOverlays && (
         <div className={styles.imageOverlays}>
           <div className={styles.overlayPillsGroup}>
             {category ? (
               <span className={styles.pill}>{category}</span>
-            ) : null}
-            {accessBadge ? (
-              <span className={styles.accessBadge} data-testid="skill-card-access-badge">
-                {accessBadge}
-              </span>
             ) : null}
           </div>
           <BookmarkButton
@@ -199,6 +194,7 @@ export const SkillCard: React.FC<SkillCardProps> = ({
             title={isBookmarked ? "Saved" : "Bookmark skill"}
           />
         </div>
+        )}
 
         {installs !== undefined && (
           <div className={styles.bottomMetricsPill} aria-label={`${installs} downloads`}>

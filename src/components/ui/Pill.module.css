@@ -24,17 +24,18 @@
     transform var(--transition-fast);
 }
 
-.pill:hover {
+.pill:hover:not(.static) {
   background-color: rgba(255, 226, 200, 0.95);
   border-color: var(--color-brand);
   color: var(--color-brand);
 }
 
-.pill:active {
+/* macOS Scale on Press (Exact 0.96) */
+.pill:active:not(.static) {
   transform: scale(0.96);
 }
 
-.pill:focus-visible {
+.pill:focus-visible:not(.static) {
   outline: none;
   box-shadow: var(--shadow-focus);
 }
@@ -45,8 +46,23 @@
   color: var(--color-white);
 }
 
-.selected:hover {
+.selected:hover:not(.static) {
   background-color: var(--color-brand-hover);
   border-color: var(--color-brand-hover);
   color: var(--color-white);
+}
+
+/* Static read-only badge variant for informative specs */
+.static {
+  cursor: default !important;
+  pointer-events: auto;
+  user-select: text;
+}
+
+.static:hover,
+.static:active {
+  background-color: rgba(255, 236, 217, 0.7) !important;
+  border-color: rgba(166, 166, 166, 0.5) !important;
+  color: #000000 !important;
+  transform: none !important;
 }
