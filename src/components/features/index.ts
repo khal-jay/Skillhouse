@@ -27,3 +27,7 @@ export * from "./SkillDetailDrawer/SkillDetailDrawer";
 export * from "./UserProfileModal";
 export * from "./HelpCenterModal";
 export * from "./FaqSection";
+export * from "./SkillBreadcrumbs";
+export * from "./AsciiCanvas";
+export * from "./SkillDocViewer";
+export * from "./SkillDetailsTabSection";

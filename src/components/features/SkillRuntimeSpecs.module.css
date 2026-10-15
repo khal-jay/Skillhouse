@@ -40,6 +40,7 @@
   gap: var(--space-3xs); /* 4px avatar gap from Figma */
 }
 
+/* Static Informational Logomarks */
 .logomark {
   width: var(--dim-avatar-spec); /* 28px */
   height: var(--dim-avatar-spec); /* 28px */
@@ -47,18 +48,15 @@
   background-color: var(--color-surface-peach); /* #FBE1C7 */
   border: 0.233px solid rgba(166, 166, 166, 0.1);
   box-shadow: 0px 1.167px 2.333px 0px rgba(16, 24, 40, 0.06);
+  outline: 1px solid oklch(0 0 0 / 0.08);
+  outline-offset: -1px;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  transition: transform var(--transition-fast);
-  cursor: pointer;
+  cursor: default;
+  user-select: none;
   flex-shrink: 0;
-}
-
-.logomark:hover {
-  transform: translateY(-2px) scale(1.12);
-  z-index: 1;
 }
 
 .logomarkIcon {

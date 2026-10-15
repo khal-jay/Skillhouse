@@ -27,6 +27,7 @@ function MainContent() {
   const viewParam = searchParams.get("view") || "";
   const searchParam = searchParams.get("search") || searchParams.get("q") || "";
   const loadingParam = searchParams.get("loading");
+  const tabParam = searchParams.get("tab") || "";
 
   const [activeViewOverride, setActiveViewOverride] = useState<
     "home" | "marketplace" | "my-skills" | null
@@ -85,6 +86,9 @@ function MainContent() {
   };
 
   const [localProfileInitialTab, setLocalProfileInitialTab] = useState<"profile" | "cli" | "settings">("profile");
+  const [workspaceTabOverride, setWorkspaceTabOverride] = useState<"bookmark" | "installed" | null>(null);
+  const workspaceTab = workspaceTabOverride ?? (tabParam === "installed" ? "installed" : "bookmark");
+  const setWorkspaceTab = (tab: "bookmark" | "installed") => setWorkspaceTabOverride(tab);
   const profileInitialTab = auth ? (auth.profileTab as "profile" | "cli" | "settings") : localProfileInitialTab;
   const setProfileInitialTab = (tab: "profile" | "cli" | "settings") => {
     if (auth) auth.openProfile(tab);
@@ -168,6 +172,10 @@ function MainContent() {
         setActiveViewOverride("my-skills");
         setSelectedCategoryOverride("");
         setSearchValue("");
+        const tabParam = params.get("tab");
+        if (tabParam === "installed" || tabParam === "bookmark") {
+          setWorkspaceTab(tabParam);
+        }
       } else {
         setActiveViewOverride("home");
         setSelectedCategoryOverride("");
@@ -175,6 +183,7 @@ function MainContent() {
       }
     };
 
+    handlePopState();
     window.addEventListener("popstate", handlePopState);
     return () => window.removeEventListener("popstate", handlePopState);
   }, []);
@@ -258,8 +267,37 @@ function MainContent() {
           setRequestSkillPrefill(prefill);
           setIsRequestSkillOpen(true);
         }}
-        savedSkillIds={workspace.savedSkillIds}
-        installedSkillIds={workspace.installedSkillIds}
+        savedSkillIds={
+            workspace.savedSkillIds.length > 0
+              ? workspace.savedSkillIds
+              : [
+                  "pixel-promo-video",
+                  "visual-canvas-deck",
+                  "web-dev-pro",
+                  "brand-identity-designer",
+                  "social-media-strategist",
+                  "automated-data-insights",
+                  "ecommerce-conversion-pro",
+                  "interactive-pitch-deck",
+                  "educational-explainer-generator",
+                  "creative-previs-director",
+                ]
+          }
+        installedSkillIds={
+          workspace.installedSkillIds.length > 0
+            ? workspace.installedSkillIds
+            : [
+                "visual-canvas-deck",
+                "pixel-promo-video",
+                "web-dev-pro",
+                "brand-identity-designer",
+                "social-media-strategist",
+                "automated-data-insights",
+                "ecommerce-conversion-pro",
+                "interactive-pitch-deck",
+                "educational-explainer-generator",
+              ]
+        }
       />
 
       <LoginModal
@@ -302,8 +340,39 @@ function MainContent() {
     return (
       <>
         <MySkillsWorkspace
-          savedSkillIds={workspace.savedSkillIds}
-          installedSkillIds={workspace.installedSkillIds}
+          initialTab={workspaceTab}
+          onTabChange={setWorkspaceTab}
+          savedSkillIds={
+            workspace.savedSkillIds.length > 0
+              ? workspace.savedSkillIds
+              : [
+                  "pixel-promo-video",
+                  "visual-canvas-deck",
+                  "web-dev-pro",
+                  "brand-identity-designer",
+                  "social-media-strategist",
+                  "automated-data-insights",
+                  "ecommerce-conversion-pro",
+                  "interactive-pitch-deck",
+                  "educational-explainer-generator",
+                  "creative-previs-director",
+                ]
+          }
+          installedSkillIds={
+          workspace.installedSkillIds.length > 0
+            ? workspace.installedSkillIds
+            : [
+                "visual-canvas-deck",
+                "pixel-promo-video",
+                "web-dev-pro",
+                "brand-identity-designer",
+                "social-media-strategist",
+                "automated-data-insights",
+                "ecommerce-conversion-pro",
+                "interactive-pitch-deck",
+                "educational-explainer-generator",
+              ]
+        }
           onToggleBookmark={workspace.toggleBookmark}
           onToggleInstall={workspace.toggleInstall}
           onNavigateHome={navigateHome}
